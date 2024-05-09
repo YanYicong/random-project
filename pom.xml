@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--指定pom模型版本（区别于maven版本）-->
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>random-project</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <!-- 业务模块 -->
+        <module>random-business</module>
+        <!-- 网关模块 -->
+        <module>random-gateway</module>
+        <!-- 通用模块 -->
+        <module>random-common</module>
+    </modules>
+
+    <properties>
+        <!-- 配置maven编译器 -->
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 依赖版本 -->
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+        <spring-boot.version>2.6.6</spring-boot.version>
+        <spring-boot-web.version>2.7.1</spring-boot-web.version>
+        <spring-boot.mybatis>2.2.2</spring-boot.mybatis>
+        <swagger.fox.version>3.0.0</swagger.fox.version>
+        <swagger.core.version>1.6.2</swagger.core.version>
+        <fastjson.version>1.2.80</fastjson.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- SpringCloud -->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-dependencies</artifactId>-->
+<!--                <version>${spring-cloud.version}</version>-->
+<!--            </dependency>-->
+<!--            &lt;!&ndash; SpringCloud Alibaba &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.cloud</groupId>-->
+<!--                <artifactId>spring-cloud-alibaba-dependencies</artifactId>-->
+<!--                <version>${spring-cloud-alibaba.version}</version>-->
+<!--            </dependency>-->
+            <!-- SpringBoot 依赖配置 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot-web.version}</version>
+            </dependency>
+            <!-- Mybatis 依赖配置 -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${spring-boot.mybatis}</version>
+            </dependency>
+            <!-- Swagger 依赖配置 -->
+            <!-- Swagger规范的java模型 -->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger.core.version}</version>
+            </dependency>
+            <!-- Swagger注解 -->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.core.version}</version>
+            </dependency>
+            <!-- JSON 解析器和生成器 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+<!--            <dependency>-->
+<!--                <groupId>com.example</groupId>-->
+<!--                <artifactId>random-common-redis</artifactId>-->
+<!--                <version>1.0</version>-->
+<!--            </dependency>-->
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- maven环境拆分 -->
+    <profiles>
+        <!--开发环境-->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
+                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
+                <config-group>DEFAULT_GROUP</config-group>
+                <namespace>randomDev</namespace>
+                <profileActive>dev</profileActive>
+            </properties>
+        </profile>
+        <!--生产环境-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
+                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
+                <config-group>DEFAULT_GROUP</config-group>
+                <namespace>randomProd</namespace>
+                <profileActive>prod</profileActive>
+            </properties>
+        </profile>
+        <!--测试环境-->
+        <profile>
+            <id>test</id>
+            <properties>
+                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
+                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
+                <config-group>DEFAULT_GROUP</config-group>
+                <namespace>randomTest</namespace>
+                <profileActive>test</profileActive>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
