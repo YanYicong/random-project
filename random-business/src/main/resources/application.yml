@@ -1,3 +1,9 @@
 server:
   port: 8001
 
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/Random-dev
+    username: root
+    password: 200087
