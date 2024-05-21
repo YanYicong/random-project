@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登录</title>
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<h1 class="title">Random</h1>
+
+<div class="input-container">
+  <input type="text" placeholder="用户名">
+</div>
+<div class="input-container">
+  <input type="password" placeholder="密码">
+</div>
+
+<div class="buttons-container">
+  <button class="button login-button" onclick="login()">登录</button>
+  <a href="register.html" class="button register-button">注册</a>
+</div>
+
+<script>
+	function login() {
+	  // 通过 window.location.href 跳转到 index.html 页面
+	  window.location.href = 'index.html';
+	}
+</script>
+
+</body>
+</html>

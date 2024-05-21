@@ -4,4 +4,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.business.mapper.ExecutionHistoryMapper">
 
+        <resultMap type="com.example.business.entity.VO.HistoryVO" id="HistoryResult">
+		<id     property="id"     column="ID"     />
+		<result property="randomCategory"   column="RANDOM_CATEGORY"   />
+		<result property="byUser"   column="BY_USER"   />
+		<result property="runResult"   column="RUN_RESULT"/>
+		<result property="isDelete" column="IS_DELETE"/>
+		<result property="isExport"   column="IS_EXPORT"   />
+		<result property="runTime"   column="RUN_TIME"   />
+		<result property="deleteTime"   column="DELETE_TIME"   />
+		<result property="exportTime"   column="EXPORT_TIME"   />
+	</resultMap>
+
+    <select id="findHistoryById" resultMap="HistoryResult">
+        SELECT
+        ID,
+        RANDOM_CATEGORY,
+        BY_USER,
+        RUN_RESULT,
+        IS_DELETE,
+        IS_EXPORT,
+        RUN_TIME,
+        DELETE_TIME,
+        EXPORT_TIME
+        FROM
+        EXECUTION_HISTORY
+        <where>
+            <if test="id != null and id != '' ">
+                AND ID = #{id}
+            </if>
+            <if test="byUser != null and byUser != '' ">
+                AND BY_USER = #{byUser}
+            </if>
+            <if test="isDelete != null and isDelete != '' ">
+                AND IS_DELETE = #{isDelete}
+            </if>
+        </where>
+    </select>
+
 </mapper>

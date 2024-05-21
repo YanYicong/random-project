@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="logo">Random</a>
+  <button class="button">用户名</button>
+</div>
+
+<div class="tabs">
+  <div class="tab" onclick="showTab('tab1')">随机选择</div>
+  <div class="tab" onclick="showTab('tab2')">选择项</div>
+  <div class="tab" onclick="showTab('tab3')">历史记录</div>
+</div>
+
+<div class="content" id="content">
+  <div id="tab0">
+	  <h1 class="default">卷</h1>
+  </div>
+  <div id="tab1" style="display: none;">
+    <iframe src="choose.html" frameborder="0" scrolling="no"></iframe>
+  </div>
+  <div id="tab2" style="display: none;">
+    <h2>Content of Tab 2</h2>
+    <p>This is the content of Tab 2.</p>
+  </div>
+</div>
+
+<script>
+	// 默认活动的标签
+  document.getElementById('tab0').classList.add('active');
+	
+  function showTab(tabId) {
+    const tabs = document.querySelectorAll('.tab');
+    const content = document.querySelectorAll('.content > div');
+
+    tabs.forEach(tab => {
+      tab.classList.remove('active');
+    });
+
+    content.forEach(tabContent => {
+      tabContent.style.display = 'none';
+    });
+
+    document.getElementById(tabId).style.display = 'block';
+    document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+  }
+  
+  
+</script>
+
+</body>
+</html>

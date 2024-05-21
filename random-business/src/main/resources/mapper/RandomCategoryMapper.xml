@@ -4,4 +4,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.business.mapper.RandomCategoryMapper">
 
+    <resultMap type="com.example.business.entity.VO.CategoryVO" id="CategoryResult">
+		<id     property="id"     column="ID"     />
+		<result property="categoryName"   column="CATEGORY_NAME"   />
+		<result property="byUser"   column="BY_USER"   />
+		<result property="createTime"   column="CREATE_TIME"/>
+		<result property="updateTime" column="UPDATE_TIME"/>
+		<result property="isApply"   column="IS_APPLY"   />
+	</resultMap>
+
+    <select id="findAllCategory" resultMap="CategoryResult">
+        SELECT
+        ID,
+        CATEGORY_NAME,
+        BY_USER,
+        CREATE_TIME,
+        UPDATE_TIME,
+        IS_APPLY
+        FROM RANDOM_CATEGORY
+        <where>
+            <if test="byUser != null and byUser != '' ">
+                AND BY_USER = #{byUser}
+            </if>
+            <if test="isApply != null and isApply != '' ">
+                AND IS_APPLY = #{isApply}
+            </if>
+        </where>
+    </select>
 </mapper>

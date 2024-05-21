@@ -5,17 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.example</groupId>
-        <artifactId>random-project</artifactId>
+        <artifactId>random-common</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>random-common</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>random-common-redis</module>
-        <module>random-common-utils</module>
-    </modules>
+    <artifactId>random-common-utils</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

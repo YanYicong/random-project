@@ -3,5 +3,34 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.business.mapper.RandomCategoryOptionMapper">
+    
+    <resultMap type="com.example.business.entity.ChooseEntity" id="ChooseResult">
+		<id     property="id"     column="ID"     />
+		<result property="optionName"   column="OPTION_NAME"   />
+		<result property="probabilityProportion"   column="PROBABILITY_PROPORTION"   />
+		<result property="inCategory"     column="IN_CATEGORY"      />
+		<result property="createTime"   column="CREATE_TIME"/>
+		<result property="updateTime" column="UPDATE_TIME"/>
+		<result property="isApply"   column="IS_APPLY"   />
+	</resultMap>
+
+    <select id="findRandomCategoryOptionByForeignId" resultMap="ChooseResult">
+        SELECT
+        ID,
+        OPTION_NAME,
+        PROBABILITY_PROPORTION,
+        IN_CATEGORY,
+        CREATE_TIME,
+        UPDATE_TIME,
+        IS_APPLY
+        FROM RANDOM_CATEGORY_OPTION
+        <where>
+            <if test="inCategory != null and inCategory != '' ">
+                AND IN_CATEGORY = #{feignId}
+            </if>
+            AND IS_APPLY = 0
+        </where>
+        limit 1
+    </select>
 
 </mapper>

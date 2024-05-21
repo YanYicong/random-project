@@ -1,11 +1,12 @@
 package com.example.business.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 随即项配置页签
+ * 随机项配置页签
  */
-@Controller
+@RestController
 public class RandomOptionController {
 
 }

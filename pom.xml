@@ -28,12 +28,14 @@
         <!-- 依赖版本 -->
         <spring-cloud.version>2021.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-        <spring-boot.version>2.6.6</spring-boot.version>
+        <spring-boot.version>2.7.1</spring-boot.version>
         <spring-boot-web.version>2.7.1</spring-boot-web.version>
         <spring-boot.mybatis>2.2.2</spring-boot.mybatis>
-        <swagger.fox.version>3.0.0</swagger.fox.version>
+        <swagger.fox.version>2.9.2</swagger.fox.version>
+        <pagehelper.boot.version>1.4.1</pagehelper.boot.version>
         <swagger.core.version>1.6.2</swagger.core.version>
         <fastjson.version>1.2.80</fastjson.version>
+        <lombok.version>1.18.24</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -43,18 +45,26 @@
 <!--                <groupId>org.springframework.cloud</groupId>-->
 <!--                <artifactId>spring-cloud-dependencies</artifactId>-->
 <!--                <version>${spring-cloud.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
 <!--            </dependency>-->
 <!--            &lt;!&ndash; SpringCloud Alibaba &ndash;&gt;-->
 <!--            <dependency>-->
 <!--                <groupId>com.alibaba.cloud</groupId>-->
 <!--                <artifactId>spring-cloud-alibaba-dependencies</artifactId>-->
 <!--                <version>${spring-cloud-alibaba.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
 <!--            </dependency>-->
+
             <!-- SpringBoot 依赖配置 -->
+            <!-- spring boot的依赖自适应兼容，且仅用于项目整体依赖，不向下继承-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -67,18 +77,27 @@
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${spring-boot.mybatis}</version>
             </dependency>
-            <!-- Swagger 依赖配置 -->
-            <!-- Swagger规范的java模型 -->
+            <!-- 分页插件 -->
             <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-models</artifactId>
-                <version>${swagger.core.version}</version>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.boot.version}</version>
             </dependency>
-            <!-- Swagger注解 -->
+            <!-- swagger -->
             <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${swagger.core.version}</version>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-spring-web</artifactId>
+                <version>${swagger.fox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.fox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.fox.version}</version>
             </dependency>
             <!-- JSON 解析器和生成器 -->
             <dependency>
@@ -86,12 +105,12 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-
-<!--            <dependency>-->
-<!--                <groupId>com.example</groupId>-->
-<!--                <artifactId>random-common-redis</artifactId>-->
-<!--                <version>1.0</version>-->
-<!--            </dependency>-->
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

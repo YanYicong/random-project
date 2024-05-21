@@ -1,7 +1,7 @@
 package com.example.business.service;
 
 /**
- * 随即项配置
+ * 随机项配置
  */
 public interface RandomOptionService {
 }
