@@ -30,7 +30,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             AND IS_APPLY = 0
         </where>
-        limit 1
     </select>
+
+    <insert id="insertCategoryOption" parameterType="com.example.business.entity.ChooseEntity">
+        INSERT INTO RANDOM_CATEGORY_OPTION(
+        ID,
+        OPTION_NAME,
+        IN_CATEGORY,
+        CREATE_TIME
+        )
+        VALUES(
+        #{id},
+        #{optionName},
+        #{inCategory},
+        DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+        )
+    </insert>
+
+    <update id="updateCategoryOption" parameterType="com.example.business.entity.ChooseEntity">
+        UPDATE RANDOM_CATEGORY_OPTION
+        <set>
+            <if test="optionName != null and optionName != ''">
+                OPTION_NAME = #{optionName},
+            </if>
+            <if test="probabilityProportion != null and probabilityProportion != ''">
+                PROBABILITY_PROPORTION = #{probabilityProportion},
+            </if>
+            <if test="inCategory != null and inCategory != ''">
+                IN_CATEGORY = #{inCategory},
+            </if>
+            <if test="isApply != null and isApply != ''">
+                IS_APPLY = #{isApply},
+            </if>
+            UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+        </set>
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deletePhysicByOptionId">
+        DELETE FROM RANDOM_CATEGORY_OPTION
+        WHERE ID = #{id}
+    </delete>
 
 </mapper>

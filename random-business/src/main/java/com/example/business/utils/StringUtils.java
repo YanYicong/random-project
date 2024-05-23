@@ -6,6 +6,7 @@ import org.springframework.util.AntPathMatcher;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 字符串工具类
@@ -19,6 +20,16 @@ public class StringUtils
 
     /** 下划线 */
     private static final char SEPARATOR = '_';
+
+    /**
+     * 生成32位定长随机id（UUID22 + 时间戳10）
+     * @return
+     */
+    public static String getUUID(){
+        String uuid = UUID.randomUUID().toString().replace("-", "")
+                + System.currentTimeMillis();
+        return uuid.substring(0, 22) + uuid.substring(uuid.length() - 10);
+    }
 
     /**
      * 获取参数不为空值

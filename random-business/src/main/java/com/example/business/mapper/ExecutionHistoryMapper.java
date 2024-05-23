@@ -3,7 +3,6 @@ package com.example.business.mapper;
 import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.VO.HistoryVO;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -13,6 +12,19 @@ import java.util.List;
 @Mapper
 public interface ExecutionHistoryMapper {
 
-    public List<HistoryVO> findHistoryById(HistoryDTO historyDTO);
+    /**
+     * 根据条件查询历史记录
+     * @param historyDTO
+     * @return
+     */
+    public List<HistoryVO> findHistoryByAll(HistoryDTO historyDTO);
+
+    /**
+     * 生成历史记录
+     * @param historyDTO  id randomCategory byUser runResult
+     * @return
+     */
+    public int addHistoryByAll(HistoryDTO historyDTO);
+
 
 }

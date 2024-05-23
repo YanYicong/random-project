@@ -31,4 +31,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
         </where>
     </select>
+
+    <insert id="insertCategory" parameterType="com.example.business.entity.DTO.CategoryDTO">
+        INSERT INTO RANDOM_CATEGORY
+        (
+        ID,
+        CATEGORY_NAME,
+        BY_USER,
+        CREATE_TIME
+        )
+        VALUES(
+        #{id},
+        #{categoryName},
+        #{byUser},
+        DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+        )
+    </insert>
+
+    <update id="updateCategory" parameterType="com.example.business.entity.DTO.CategoryDTO">
+        UPDATE RANDOM_CATEGORY
+        <set>
+            <if test="categoryName != null and categoryName != ''">
+                CATEGORY_NAME = #{categoryName},
+            </if>
+            <if test="isApply != null and isApply != ''">
+                IS_APPLY = #{isApply},
+            </if>
+            UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+        </set>
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteByOptionId">
+        DELETE FROM RANDOM_CATEGORY
+        WHERE ID = #{id}
+    </delete>
+
 </mapper>

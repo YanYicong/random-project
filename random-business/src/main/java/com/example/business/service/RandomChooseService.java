@@ -15,9 +15,9 @@ public interface RandomChooseService {
 
     /**
      * 执行随机选择
-     * @param chooses
+     * @param categoryId
      * @return
      */
-    public ChooseEntity getStartResult(List<ChooseEntity> chooses);
+    public ChooseEntity getStartResult(String categoryId);
 
 }

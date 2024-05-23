@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="exportTime"   column="EXPORT_TIME"   />
 	</resultMap>
 
-    <select id="findHistoryById" resultMap="HistoryResult">
+    <select id="findHistoryByAll" resultMap="HistoryResult">
         SELECT
         ID,
         RANDOM_CATEGORY,
@@ -33,13 +33,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null and id != '' ">
                 AND ID = #{id}
             </if>
+            <if test="randomCategory != null and randomCategory != '' ">
+                AND RANDOM_CATEGORY = #{randomCategory}
+            </if>
             <if test="byUser != null and byUser != '' ">
                 AND BY_USER = #{byUser}
             </if>
-            <if test="isDelete != null and isDelete != '' ">
-                AND IS_DELETE = #{isDelete}
-            </if>
+                AND IS_DELETE = 0
         </where>
     </select>
+
+    <insert id="addHistoryByAll" parameterType="com.example.business.entity.DTO.HistoryDTO">
+        INSERT INTO EXECUTION_HISTORY(
+        ID,
+        RANDOM_CATEGORY,
+        BY_USER,
+        RUN_RESULT,
+        RUN_TIME
+        )
+        VALUES(
+        #{id},
+        #{randomCategory},
+        #{byUser},
+        #{runResult},
+        DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+        )
+    </insert>
 
 </mapper>

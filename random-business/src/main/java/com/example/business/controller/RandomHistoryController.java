@@ -1,11 +1,14 @@
 package com.example.business.controller;
 
 import com.example.business.entity.DTO.HistoryDTO;
+import com.example.business.entity.VO.HistoryOptionVO;
+import com.example.business.entity.VO.HistoryVO;
 import com.example.business.service.RandomHistoryService;
 import com.example.business.utils.Result;
 import com.example.business.utils.page.TableDataInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,12 +33,23 @@ public class RandomHistoryController {
      *  传参携带分页参数eg：pageNum=1&pageSize=10
      * @return
      */
-    @ApiOperation(value = "分页查询历史记录", response = HistoryDTO.class)
+    @ApiOperation(value = "分页查询历史记录", response = HistoryVO.class)
     @PostMapping("/historyPage")
     public TableDataInfo getAllHistoryPage(HistoryDTO historyDTO)
     {
         startPage();
         return Result.successPageInfo(historyService.getHistory(historyDTO));
+    }
+
+    /**
+     * 获取历史记录详情
+     * @param historyId
+     * @return
+     */
+    @ApiOperation(value = "获取历史记录详情", response = HistoryOptionVO.class)
+    @GetMapping("/historyOption")
+    public Result getHistoryOption(String historyId){
+        return Result.success(historyService.getHistoryOption(historyId));
     }
 
 }

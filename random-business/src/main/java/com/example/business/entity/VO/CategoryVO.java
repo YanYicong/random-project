@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @ApiModel("随机项组出参")
@@ -30,5 +31,5 @@ public class CategoryVO{
     private Integer isApply;
 
     @ApiModelProperty("随机项")
-    private ChooseEntity option;
+    private List<ChooseEntity> option;
 }

@@ -6,10 +6,7 @@ import com.example.business.service.RandomChooseService;
 import com.example.business.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,11 +36,12 @@ public class RandomChooseController {
 
     /**
      * 执行随机选择
-     * @param chooses
+     * @param categoryId
      * @return
      */
-    @GetMapping("/startRandom")
-    public ChooseEntity getRandomResult(@RequestBody List<ChooseEntity> chooses){
-        return null;
+    @ApiOperation(value = "执行随机选项", response = ChooseEntity.class)
+    @PostMapping("/startRandom")
+    public Result getRandomResult(String categoryId){
+        return Result.success(randomChooseService.getStartResult(categoryId));
     }
 }

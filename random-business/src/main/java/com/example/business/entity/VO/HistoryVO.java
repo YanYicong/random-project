@@ -14,6 +14,9 @@ public class HistoryVO {
     private String id;
 
     @ApiModelProperty("随机项组id")
+    private String randomCategoryId;
+
+    @ApiModelProperty("随机项组名")
     private String randomCategory;
 
     @ApiModelProperty("归属用户")
