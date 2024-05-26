@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @ApiModel("随机历史详情入参")
@@ -20,6 +22,6 @@ public class HistoryOptionDTO {
     private String optionName;
 
     @ApiModelProperty("随机概率")
-    private Integer probability;
+    private BigDecimal probability;
 
 }

@@ -42,5 +42,11 @@ public interface RandomCategoryMapper {
      */
     public int deleteByOptionId(String id);
 
+    /**
+     * 定时任务逻辑删除转物理删除
+     * @return
+     */
+    public int deleteCategoryByIsApply();
+
 
 }

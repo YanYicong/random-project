@@ -7,6 +7,7 @@ import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.DTO.HistoryOptionDTO;
 import com.example.business.entity.VO.CategoryVO;
+import com.example.business.exception.ProportionException;
 import com.example.business.mapper.ExecutionHistoryMapper;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.mapper.RandomCategoryMapper;
@@ -18,11 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 随机选项页签业务实现
@@ -49,10 +49,9 @@ public class RandomChooseServiceImpl implements RandomChooseService {
      * @return
      */
     @Override
-    public List<CategoryVO> getAllCategories() {
+    public List<CategoryVO> getAllCategories(CategoryDTO categoryDTO) {
 //        1、组装查询条件并获取组信息（当前无用户）
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setIsApply(UtilsConstants.isApplyStatic);
+        categoryDTO.setByUser("admin");
         List<CategoryVO> categories = randomCategoryMapper.findAllCategory(categoryDTO);
 //        2、置入随机项详情
         for(CategoryVO category : categories){
@@ -68,19 +67,19 @@ public class RandomChooseServiceImpl implements RandomChooseService {
      */
     @Override
     @Transactional
-    public ChooseEntity getStartResult(String categoryId) {
+    public ChooseEntity getStartResult(String categoryId) throws ProportionException,NoSuchAlgorithmException{
 //        1、获取参与随机的数据
         List<ChooseEntity> randomData = randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(categoryId);
         log.info("随机数据获取成功");
 //        2、开始随机并获取结果
-        ChooseEntity result = new ChooseEntity();
-        try {
-            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
-            int randomInt = secureRandom.nextInt(randomData.size());
-            result = randomData.get(randomInt);
-        }catch (NoSuchAlgorithmException e){
-            ;
-        }
+        ChooseEntity result = random(randomData);
+//        try {
+//            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+//            int randomInt = secureRandom.nextInt(randomData.size());
+//            result = randomData.get(randomInt);
+//        }catch (NoSuchAlgorithmException e){
+//            ;
+//        }
         log.info("随机结果获取成功");
 //        3、使用随机结果构建条件并存入历史记录和历史记录详情
         String categoryName = randomCategoryMapper.findAllCategory
@@ -110,6 +109,69 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         int flagHistoryOption = executionHistoryOptionMapper.addHistoryOptionByAll(historyOptions);
         if (flagHistoryOption != randomData.size()) {
             log.info("历史记录详情添加失败");
+        }
+        return result;
+    }
+
+    /**
+     * 执行
+     * @param randomData
+     * @return
+     */
+    public ChooseEntity random(List<ChooseEntity> randomData) throws ProportionException,NoSuchAlgorithmException{
+
+        final BigDecimal hundred = new BigDecimal("100");
+
+//        判断是否设置过自定义概率
+        BigDecimal sum = new BigDecimal("0");
+        int count = randomData.size();
+        for(ChooseEntity chooseEntity : randomData){
+            if(StringUtils.isNotNull(chooseEntity.getProbabilityProportion())){
+                sum = sum.add (chooseEntity.getProbabilityProportion());
+                count--;
+            }
+        }
+//        如果所有元素都没有配置概率则按照平均概率
+        if (BigDecimal.ZERO.compareTo(sum) == 0) {
+            int randomInt = 0;
+            try {
+                SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+                randomInt = secureRandom.nextInt(randomData.size());
+            }catch (NoSuchAlgorithmException e){
+                throw new NoSuchAlgorithmException();
+            }
+            return randomData.get(randomInt);
+        }
+//        如果存在设置概率则将其他概率平均分配并补齐
+//        判断概率是否合法，是否存在需要手动添加的空概率
+        BigDecimal flag = hundred.subtract(sum);
+        if (flag.compareTo(BigDecimal.ZERO) < 0) {
+            throw new ProportionException();
+        }
+        BigDecimal dividend = flag.divide(new BigDecimal(String.valueOf(count)));
+        randomData.stream().forEach(chooseEntity -> {
+            if (StringUtils.isNull(chooseEntity.getProbabilityProportion())) {
+                chooseEntity.setProbabilityProportion(dividend);
+            }
+        });
+//        获取随机概率
+        int randomInt = 0;
+        try {
+            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+            randomInt = secureRandom.nextInt(10001);
+        }catch (NoSuchAlgorithmException e){
+            throw new NoSuchAlgorithmException();
+        }
+        BigDecimal randomIndex = new BigDecimal(String.valueOf(randomInt / 100.0));
+//        根据概率分布元素并将随机数定位
+        sum = new BigDecimal("0");
+        ChooseEntity result = randomData.get(0);
+        for(ChooseEntity chooseEntity : randomData){
+            sum = sum.add(chooseEntity.getProbabilityProportion());
+            if(randomIndex.compareTo(sum) > 0){
+               break;
+            }
+            result = chooseEntity;
         }
         return result;
     }

@@ -40,5 +40,17 @@ public interface RandomCategoryOptionMapper {
      */
     public int deletePhysicByOptionId(String id);
 
+    /**
+     * 根据组id逻辑删除随机项
+     * @param categoryId
+     * @return
+     */
+    public int updateByCategoryId(String categoryId);
+
+    /**
+     * 定时任务逻辑删除转物理删除
+     * @return
+     */
+    public int deleteOptionByIsApply();
 
 }

@@ -72,4 +72,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE ID = #{id}
     </delete>
 
+    <update id="updateByCategoryId" parameterType="string">
+        UPDATE RANDOM_CATEGORY_OPTION
+        <set>
+            IS_APPLY = 1
+        </set>
+        WHERE IN_CATEGORY = #{categoryId}
+    </update>
+
+    <delete id="deleteOptionByIsApply">
+        DELETE FROM RANDOM_CATEGORY_OPTION
+        WHERE IS_APPLY = 1
+    </delete>
+
 </mapper>

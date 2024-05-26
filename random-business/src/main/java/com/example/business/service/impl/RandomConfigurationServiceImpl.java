@@ -6,13 +6,16 @@ import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomConfigurationService;
 import com.example.business.utils.StringUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
 /**
  * 随机项配置业务实现
  */
+@Log4j2
 @Service
 public class RandomConfigurationServiceImpl implements RandomConfigurationService {
 
@@ -23,6 +26,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
     private RandomCategoryOptionMapper randomCategoryOptionMapper;
 
     @Override
+    @Transactional
     public int insertAndUpdateCategory(CategoryDTO categoryDTO) {
 //        1、判断操作类型
         int size = randomCategoryMapper.findAllCategory(categoryDTO).size();
@@ -31,10 +35,15 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
             categoryDTO.setByUser("admin");
             categoryDTO.setId(StringUtils.getUUID());
             return randomCategoryMapper.insertCategory(categoryDTO);
-        }else {
-//            3、修改或逻辑删除
+        }
+//        3、逻辑删除（携带子项）
+        if(categoryDTO.getIsApply() == 1) {
+            int option = randomCategoryOptionMapper.updateByCategoryId(categoryDTO.getId());
+            log.info("已删除{}条子项", option);
             return randomCategoryMapper.updateCategory(categoryDTO);
         }
+//        4、修改
+        return randomCategoryMapper.updateCategory(categoryDTO);
     }
 
     @Override

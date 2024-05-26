@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +18,7 @@ public class ChooseEntity {
     private String optionName;
 
     @ApiModelProperty("随机概率")
-    private Integer probabilityProportion;
+    private BigDecimal probabilityProportion;
 
     @ApiModelProperty("随机项组id")
     private String inCategory;
