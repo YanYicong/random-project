@@ -9,7 +9,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="randomCategory"   column="RANDOM_CATEGORY"   />
 		<result property="byUser"   column="BY_USER"   />
 		<result property="runResult"   column="RUN_RESULT"/>
-		<result property="isDelete" column="IS_DELETE"/>
 		<result property="isExport"   column="IS_EXPORT"   />
 		<result property="runTime"   column="RUN_TIME"   />
 		<result property="deleteTime"   column="DELETE_TIME"   />
@@ -22,7 +21,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         RANDOM_CATEGORY,
         BY_USER,
         RUN_RESULT,
-        IS_DELETE,
         IS_EXPORT,
         RUN_TIME,
         DELETE_TIME,
@@ -39,7 +37,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="byUser != null and byUser != '' ">
                 AND BY_USER = #{byUser}
             </if>
-                AND IS_DELETE = 0
         </where>
     </select>
 
@@ -60,4 +57,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         )
     </insert>
 
+    <delete id="deleteHistoryByIds">
+        DELETE FROM EXECUTION_HISTORY
+        WHERE ID IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteHistoryByUser">
+        DELETE FROM EXECUTION_HISTORY
+        WHERE BY_USER = #{byUser}
+    </delete>
 </mapper>

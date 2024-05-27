@@ -1,7 +1,10 @@
 package com.example.business.service.impl;
 
+import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
+import com.example.business.exception.ParamValidateException;
+import com.example.business.exception.ProportionException;
 import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomConfigurationService;
@@ -27,34 +30,31 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
 
     @Override
     @Transactional
-    public int insertAndUpdateCategory(CategoryDTO categoryDTO) {
-//        1、判断操作类型
-        int size = randomCategoryMapper.findAllCategory(categoryDTO).size();
-//        2、新增
-        if(size == 0){
-            categoryDTO.setByUser("admin");
+    public int insertAndUpdateCategory(CategoryDTO categoryDTO) throws ParamValidateException{
+//        1、新增
+        if(StringUtils.isEmpty(categoryDTO.getId())){
+            categoryDTO.setByUser(UtilsConstants.ADMIN_USER);
             categoryDTO.setId(StringUtils.getUUID());
             return randomCategoryMapper.insertCategory(categoryDTO);
         }
-//        3、逻辑删除（携带子项）
-        if(categoryDTO.getIsApply() == 1) {
+//        2、逻辑删除（携带子项）
+        if(categoryDTO.getIsApply() == UtilsConstants.notApplyStatic) {
             int option = randomCategoryOptionMapper.updateByCategoryId(categoryDTO.getId());
             log.info("已删除{}条子项", option);
             return randomCategoryMapper.updateCategory(categoryDTO);
         }
-//        4、修改
+//        3、修改
         return randomCategoryMapper.updateCategory(categoryDTO);
     }
 
     @Override
     public int insertAndUpdateOption(ChooseEntity chooseEntity) {
-//        1、判断操作类型
+//        1、新增
         if(StringUtils.isEmpty(chooseEntity.getId())){
-//            2、新增
             chooseEntity.setId(StringUtils.getUUID());
             return randomCategoryOptionMapper.insertCategoryOption(chooseEntity);
         }else {
-//            3、修改和删除
+//            2、修改和删除
             return randomCategoryOptionMapper.updateCategoryOption(chooseEntity);
         }
     }

@@ -15,4 +15,7 @@ public interface RandomHistoryService {
 
     public List<HistoryOptionVO> getHistoryOption(String historyId);
 
+    public int moveHistoryByIds(List<String> ids);
+
+    public int moveHistoryAllByUser(String byUser);
 }

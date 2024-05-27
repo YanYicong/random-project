@@ -27,4 +27,11 @@ public interface ExecutionHistoryOptionMapper {
      */
     public int addHistoryOptionByAll(List<HistoryOptionDTO> historyOptionDTO);
 
+    /**
+     * 根据历史记录id（批量）删除记录详情
+     * @param historyIds
+     * @return
+     */
+    public int deleteHistoryOptionByHistoryIds(List<String> historyIds);
+
 }

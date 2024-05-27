@@ -1,11 +1,6 @@
 package com.example.business.utils;
 
-import com.example.business.Constants.UtilsConstants;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
+import com.example.business.constants.UtilsConstants;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -118,7 +113,7 @@ public class ServletUtils
         String value = request.getHeader(name);
         if (StringUtils.isEmpty(value))
         {
-            return UtilsConstants.emptyStr;
+            return UtilsConstants.EMPTY_STR;
         }
         return urlDecode(value);
     }
@@ -203,7 +198,7 @@ public class ServletUtils
         }
         catch (UnsupportedEncodingException e)
         {
-            return UtilsConstants.emptyStr;
+            return UtilsConstants.EMPTY_STR;
         }
     }
 
@@ -221,7 +216,7 @@ public class ServletUtils
         }
         catch (UnsupportedEncodingException e)
         {
-            return UtilsConstants.emptyStr;
+            return UtilsConstants.EMPTY_STR;
         }
     }
 

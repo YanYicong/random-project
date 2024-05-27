@@ -2,6 +2,7 @@ package com.example.business.service;
 
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
+import com.example.business.exception.ParamValidateException;
 
 /**
  * 随机项配置
@@ -13,7 +14,7 @@ public interface RandomConfigurationService {
      * @param categoryDTO
      * @return
      */
-    public int insertAndUpdateCategory(CategoryDTO categoryDTO);
+    public int insertAndUpdateCategory(CategoryDTO categoryDTO) throws ParamValidateException;
 
     /**
      * 新增或修改随机项(逻辑删除)

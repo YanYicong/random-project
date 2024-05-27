@@ -24,9 +24,6 @@ public class HistoryDTO {
     @ApiModelProperty("归属用户")
     private String byUser;
 
-    @ApiModelProperty("是否删除")
-    private Integer isDelete;
-
     @ApiModelProperty("是否导出")
     private Integer isExport;
 

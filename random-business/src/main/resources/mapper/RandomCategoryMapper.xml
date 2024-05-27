@@ -23,6 +23,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         IS_APPLY
         FROM RANDOM_CATEGORY
         <where>
+            <if test="id != null and id != '' ">
+                AND ID = #{id}
+            </if>
             <if test="categoryName != null and categoryName != '' ">
                 AND CATEGORY_NAME = #{categoryName}
             </if>

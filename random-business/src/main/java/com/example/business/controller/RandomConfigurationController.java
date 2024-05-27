@@ -1,7 +1,9 @@
 package com.example.business.controller;
 
+import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
+import com.example.business.exception.ParamValidateException;
 import com.example.business.service.RandomConfigurationService;
 import com.example.business.utils.Result;
 import io.swagger.annotations.Api;
@@ -31,9 +33,9 @@ public class RandomConfigurationController {
      */
     @ApiOperation("新增/修改/逻辑删除 随机项组")
     @PostMapping("/randomCategory")
-    public Result saveRandomCategory(CategoryDTO categoryDTO){
-        return randomConfigurationService.insertAndUpdateCategory(categoryDTO) == 1 ?
-                Result.success("操作成功") : Result.error("操作失败");
+    public Result saveRandomCategory(CategoryDTO categoryDTO) throws ParamValidateException {
+        return randomConfigurationService.insertAndUpdateCategory(categoryDTO) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
+                Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
 
     /**
@@ -44,8 +46,8 @@ public class RandomConfigurationController {
     @ApiOperation("新增/修改/逻辑删除 随机项")
     @PostMapping("/randomOption")
     public Result saveRandomOption(ChooseEntity chooseEntity){
-        return randomConfigurationService.insertAndUpdateOption(chooseEntity) == 1 ?
-                Result.success("操作成功") : Result.error("操作失败");
+        return randomConfigurationService.insertAndUpdateOption(chooseEntity) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
+                Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
 
     /**
@@ -56,8 +58,8 @@ public class RandomConfigurationController {
     @ApiOperation("物理删除随机项组")
     @DeleteMapping("/delRandomCategory")
     public Result removePhysicsRandomCategory(String id) {
-        return randomConfigurationService.delCategory(id) == 1 ?
-                Result.success("操作成功") : Result.error("操作失败");
+        return randomConfigurationService.delCategory(id) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
+                Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
 
     /**
@@ -68,8 +70,8 @@ public class RandomConfigurationController {
     @ApiOperation("物理删除随机项")
     @DeleteMapping("/delRandomOption")
     public Result removePhysicsRandomOption(String id){
-        return randomConfigurationService.delCategoryOption(id) == 1 ?
-                Result.success("操作成功") : Result.error("操作失败");
+        return randomConfigurationService.delCategoryOption(id) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
+                Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.business.controller;
 
+import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.VO.HistoryOptionVO;
 import com.example.business.entity.VO.HistoryVO;
@@ -7,13 +8,13 @@ import com.example.business.service.RandomHistoryService;
 import com.example.business.utils.Result;
 import com.example.business.utils.page.TableDataInfo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+
+import java.util.List;
 
 import static com.example.business.utils.page.PageUtil.startPage;
 
@@ -50,6 +51,30 @@ public class RandomHistoryController {
     @GetMapping("/historyOption")
     public Result getHistoryOption(String historyId){
         return Result.success(historyService.getHistoryOption(historyId));
+    }
+
+    /**
+     * 批量删除历史记录
+     * @param ids
+     * @return
+     */
+    @ApiModelProperty(value = "批量删除历史记录")
+    @DeleteMapping("historyClean")
+    public Result removeHistories(List<String> ids) {
+        return historyService.moveHistoryByIds(ids) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
+                Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
+    }
+
+    /**
+     * 清空历史记录
+     * @param byUser
+     * @return
+     */
+    @ApiModelProperty(value = "清空历史记录")
+    @DeleteMapping("historyCleanAll")
+    public Result cleanAllHistories(String byUser) {
+        return historyService.moveHistoryAllByUser(byUser) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
+                Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
 
 }

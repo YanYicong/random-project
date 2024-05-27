@@ -26,5 +26,19 @@ public interface ExecutionHistoryMapper {
      */
     public int addHistoryByAll(HistoryDTO historyDTO);
 
+    /**
+     * 根据id(批量)删除历史记录
+     * @param ids
+     * @return
+     */
+    public int deleteHistoryByIds(List<String> ids);
+
+    /**
+     * 清空历史记录
+     * @param byUser
+     * @return
+     */
+    public int deleteHistoryByUser(String byUser);
+
 
 }

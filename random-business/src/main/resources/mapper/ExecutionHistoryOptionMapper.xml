@@ -38,7 +38,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         #{historyOptionDTO.probability}
         )
         </foreach>
-
     </insert>
+
+    <delete id="deleteHistoryOptionByHistoryIds">
+        DELETE FROM EXECUTION_HISTORY_OPTION
+        WHERE HISTORY_ID IN
+        <foreach collection="list" item="historyId" open="(" separator="," close=")">
+            #{historyId}
+        </foreach>
+    </delete>
 
 </mapper>

@@ -1,7 +1,7 @@
 package com.example.business.service.impl;
 
 
-import com.example.business.Constants.UtilsConstants;
+import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.entity.DTO.HistoryDTO;
@@ -51,7 +51,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
     @Override
     public List<CategoryVO> getAllCategories(CategoryDTO categoryDTO) {
 //        1、组装查询条件并获取组信息（当前无用户）
-        categoryDTO.setByUser("admin");
+        categoryDTO.setByUser(UtilsConstants.ADMIN_USER);
         List<CategoryVO> categories = randomCategoryMapper.findAllCategory(categoryDTO);
 //        2、置入随机项详情
         for(CategoryVO category : categories){
@@ -83,17 +83,17 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         log.info("随机结果获取成功");
 //        3、使用随机结果构建条件并存入历史记录和历史记录详情
         String categoryName = randomCategoryMapper.findAllCategory
-                (new CategoryDTO(result.getId())).get(0).getCategoryName();
+                (new CategoryDTO(result.getId())).get(UtilsConstants.FIRST_ONE_INDEX).getCategoryName();
         log.info("查询随机项组名成功");
         String uuid = StringUtils.getUUID();
         HistoryDTO historyDTO = HistoryDTO.builder()
                 .id(uuid)
                 .randomCategory(categoryName)
-                .byUser("admin")
+                .byUser(UtilsConstants.ADMIN_USER)
                 .runResult(result.getOptionName())
                 .build();
         int flagHistory = executionHistoryMapper.addHistoryByAll(historyDTO);
-        if(flagHistory != 1){
+        if(flagHistory != UtilsConstants.DATABASE_OPERA_SUCCESS){
             log.info("历史记录添加失败");
         }
         List<HistoryOptionDTO> historyOptions = new ArrayList<>();

@@ -25,9 +25,6 @@ public class HistoryVO {
     @ApiModelProperty("执行结果")
     private String runResult;
 
-    @ApiModelProperty("是否删除")
-    private Integer isDelete;
-
     @ApiModelProperty("是否导出")
     private Integer isExport;
 

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 /**
  * 随机选择页签
@@ -28,7 +27,6 @@ public class RandomChooseController {
 
     /**
      * 根据条件获取随机项组和选项(1.0无用户)
-     * @return
      */
     @ApiOperation(value = "获取随机项组及其随机项", response = CategoryVO.class)
     @GetMapping("/categories")
@@ -39,8 +37,6 @@ public class RandomChooseController {
 
     /**
      * 执行随机选择
-     * @param categoryId
-     * @return
      */
     @ApiOperation(value = "执行随机选项", response = ChooseEntity.class)
     @PostMapping("/startRandom")
