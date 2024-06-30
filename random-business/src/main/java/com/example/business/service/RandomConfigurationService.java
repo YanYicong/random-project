@@ -37,4 +37,16 @@ public interface RandomConfigurationService {
      * @return
      */
     public int delCategoryOption(String id);
+
+    /**
+     * 恢复所有
+     * @return
+     */
+    public int updateAllDelete();
+
+    /**
+     * 清除所有
+     * @return
+     */
+    public int killAllDelete();
 }

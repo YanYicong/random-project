@@ -7,11 +7,9 @@ import com.example.business.exception.ParamValidateException;
 import com.example.business.service.RandomConfigurationService;
 import com.example.business.utils.Result;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -31,21 +29,21 @@ public class RandomConfigurationController {
      * @param categoryDTO
      * @return
      */
-    @ApiOperation("新增/修改/逻辑删除 随机项组")
+    @ApiOperation("新增/修改/逻辑删除/恢复 随机项组")
     @PostMapping("/randomCategory")
-    public Result saveRandomCategory(CategoryDTO categoryDTO) throws ParamValidateException {
+    public Result saveRandomCategory(@RequestBody CategoryDTO categoryDTO) throws ParamValidateException {
         return randomConfigurationService.insertAndUpdateCategory(categoryDTO) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
 
     /**
-     * 新增/修改/逻辑删除 随机项
+     * 新增/修改/逻辑删除/恢复 随机项
      * @param chooseEntity
      * @return
      */
     @ApiOperation("新增/修改/逻辑删除 随机项")
     @PostMapping("/randomOption")
-    public Result saveRandomOption(ChooseEntity chooseEntity){
+    public Result saveRandomOption(@RequestBody ChooseEntity chooseEntity){
         return randomConfigurationService.insertAndUpdateOption(chooseEntity) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
@@ -72,6 +70,26 @@ public class RandomConfigurationController {
     public Result removePhysicsRandomOption(String id){
         return randomConfigurationService.delCategoryOption(id) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
+    }
+
+    /**
+     * 恢复全部
+     * @return
+     */
+    @ApiOperation("恢复全部")
+    @PostMapping("/restoreAll")
+    public Result restoreAllByUser() {
+        return new Result(UtilsConstants.REQUEST_SUCCESS, String.valueOf(randomConfigurationService.updateAllDelete()));
+    }
+
+    /**
+     * 永久删除全部
+     * @return
+     */
+    @ApiModelProperty("永久删除全部")
+    @DeleteMapping("/killAll")
+    public Result killAllByUser() {
+        return new Result(UtilsConstants.REQUEST_SUCCESS, String.valueOf(randomConfigurationService.killAllDelete()));
     }
 
 

@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="isApply"   column="IS_APPLY"   />
 	</resultMap>
 
-    <select id="findRandomCategoryOptionByForeignId" resultMap="ChooseResult">
+    <select id="findRandomCategoryOptionByForeignId" resultMap="ChooseResult" parameterType="com.example.business.entity.ChooseEntity">
         SELECT
         ID,
         OPTION_NAME,
@@ -25,10 +25,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         IS_APPLY
         FROM RANDOM_CATEGORY_OPTION
         <where>
-            <if test="inCategory != null and inCategory != '' ">
-                AND IN_CATEGORY = #{feignId}
+            <if test="inCategory != null and inCategory != ''">
+               AND IN_CATEGORY = #{inCategory}
             </if>
-            AND IS_APPLY = 0
+            <if test="isApply != null">
+               AND IS_APPLY = #{isApply}
+            </if>
         </where>
     </select>
 
@@ -59,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="inCategory != null and inCategory != ''">
                 IN_CATEGORY = #{inCategory},
             </if>
-            <if test="isApply != null and isApply != ''">
+            <if test="isApply != null">
                 IS_APPLY = #{isApply},
             </if>
             UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
@@ -72,11 +74,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE ID = #{id}
     </delete>
 
+    <delete id="deletePhysicByInCategory">
+        DELETE FROM RANDOM_CATEGORY_OPTION
+        WHERE IN_CATEGORY = #{inCategory}
+    </delete>
+
     <update id="updateByCategoryId" parameterType="string">
         UPDATE RANDOM_CATEGORY_OPTION
-        <set>
-            IS_APPLY = 1
-        </set>
+        SET IS_APPLY =
+        CASE
+            WHEN IS_APPLY = 0 THEN 1
+            WHEN IS_APPLY = 1 THEN 0
+        END
         WHERE IN_CATEGORY = #{categoryId}
     </update>
 
@@ -85,4 +94,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         WHERE IS_APPLY = 1
     </delete>
 
+    <update id="updateRestoreOption">
+        UPDATE RANDOM_CATEGORY_OPTION
+        SET IS_APPLY = 0
+        WHERE IN_CATEGORY = #{id}
+    </update>
+
+    <delete id="deleteOptionById">
+        DELETE FROM RANDOM_CATEGORY_OPTION
+        WHERE IN_CATEGORY = #{id} AND IS_APPLY = 1
+    </delete>
 </mapper>

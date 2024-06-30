@@ -50,12 +50,34 @@ public class RandomChooseServiceImpl implements RandomChooseService {
      */
     @Override
     public List<CategoryVO> getAllCategories(CategoryDTO categoryDTO) {
-//        1、组装查询条件并获取组信息（当前无用户）
+//        1、组装查询条件（当前无用户）
+//        (如果需要查询已删除数据则需要查询所有数据然后过滤掉随机项和组都未删除的数据以显示所有删除的项和组)
         categoryDTO.setByUser(UtilsConstants.ADMIN_USER);
+        boolean flag = false;
+        ChooseEntity chooseEntity = new ChooseEntity();
+        if(categoryDTO.getIsApply() == UtilsConstants.notApplyStatic){
+            categoryDTO.setIsApply(null);
+            chooseEntity.setIsApply(UtilsConstants.notApplyStatic);
+            flag = true;
+        }else {
+            chooseEntity.setIsApply(categoryDTO.getIsApply());
+        }
+//        2、根据条件查询组和项数据
         List<CategoryVO> categories = randomCategoryMapper.findAllCategory(categoryDTO);
-//        2、置入随机项详情
         for(CategoryVO category : categories){
-            category.setOption(randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(category.getId()));
+            chooseEntity.setInCategory(category.getId());
+            category.setOption(randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(chooseEntity));
+        }
+//        2.2、查找的是已删除数据，则需要过滤
+        List<CategoryVO> result = new ArrayList<>();
+        if(flag){
+            for (CategoryVO vo : categories) {
+                if(vo.getOption().toString().contains("isApply=1")
+                        || vo.getIsApply() == UtilsConstants.notApplyStatic){
+                    result.add(vo);
+                }
+            }
+            categories = result;
         }
         return categories;
     }
@@ -69,7 +91,10 @@ public class RandomChooseServiceImpl implements RandomChooseService {
     @Transactional
     public ChooseEntity getStartResult(String categoryId) throws ProportionException,NoSuchAlgorithmException{
 //        1、获取参与随机的数据
-        List<ChooseEntity> randomData = randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(categoryId);
+        ChooseEntity chooseParam = new ChooseEntity();
+        chooseParam.setIsApply(UtilsConstants.isApplyStatic);
+        chooseParam.setInCategory(categoryId);
+        List<ChooseEntity> randomData = randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(chooseParam);
         log.info("随机数据获取成功");
 //        2、开始随机并获取结果
         ChooseEntity result = random(randomData);
@@ -83,7 +108,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         log.info("随机结果获取成功");
 //        3、使用随机结果构建条件并存入历史记录和历史记录详情
         String categoryName = randomCategoryMapper.findAllCategory
-                (new CategoryDTO(result.getId())).get(UtilsConstants.FIRST_ONE_INDEX).getCategoryName();
+                (new CategoryDTO(result.getInCategory())).get(UtilsConstants.FIRST_ONE_INDEX).getCategoryName();
         log.info("查询随机项组名成功");
         String uuid = StringUtils.getUUID();
         HistoryDTO historyDTO = HistoryDTO.builder()
@@ -168,7 +193,8 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         ChooseEntity result = randomData.get(0);
         for(ChooseEntity chooseEntity : randomData){
             sum = sum.add(chooseEntity.getProbabilityProportion());
-            if(randomIndex.compareTo(sum) > 0){
+            if(randomIndex.compareTo(sum) < 0){
+                result = chooseEntity;
                break;
             }
             result = chooseEntity;

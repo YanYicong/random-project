@@ -7,11 +7,13 @@ import com.example.business.entity.VO.HistoryVO;
 import com.example.business.mapper.ExecutionHistoryMapper;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.service.RandomHistoryService;
+import com.example.business.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,7 @@ public class RandomHistoryServiceImpl implements RandomHistoryService {
      */
     @Override
     public List<HistoryVO> getHistory(HistoryDTO historyDTO) {
+//        todo
         return executionHistoryMapper.findHistoryByAll(historyDTO);
     }
 
@@ -66,8 +69,6 @@ public class RandomHistoryServiceImpl implements RandomHistoryService {
     @Override
     @Transactional
     public int moveHistoryAllByUser(String byUser) {
-        int historyRecord = executionHistoryMapper.deleteHistoryByUser(byUser);
-        log.info("成功清除历史记录共{}条", historyRecord);
 //        获取historyId
         HistoryDTO historyDTO = HistoryDTO.builder()
                 .byUser(byUser).build();
@@ -76,6 +77,8 @@ public class RandomHistoryServiceImpl implements RandomHistoryService {
         List<String> ids = histories.stream()
                 .map(HistoryVO :: getId)
                 .collect(Collectors.toList());
+        int historyRecord = executionHistoryMapper.deleteHistoryByUser(byUser);
+        log.info("成功清除历史记录共{}条", historyRecord);
         int historyOptionRecord = executionHistoryOptionMapper.deleteHistoryOptionByHistoryIds(ids);
         log.info("成功清除历史记录详情共{}条", historyOptionRecord);
         return UtilsConstants.DATABASE_OPERA_SUCCESS;

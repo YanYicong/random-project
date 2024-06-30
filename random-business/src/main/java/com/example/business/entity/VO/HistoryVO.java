@@ -7,14 +7,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@ApiModel("随即历史出参")
+@ApiModel("随机历史出参")
 public class HistoryVO {
 
     @ApiModelProperty("id")
     private String id;
-
-    @ApiModelProperty("随机项组id")
-    private String randomCategoryId;
 
     @ApiModelProperty("随机项组名")
     private String randomCategory;
@@ -30,9 +27,6 @@ public class HistoryVO {
 
     @ApiModelProperty("运行时间")
     private LocalDateTime runTime;
-
-    @ApiModelProperty("删除时间")
-    private LocalDateTime deleteTime;
 
     @ApiModelProperty("导出时间")
     private LocalDateTime exportTime;

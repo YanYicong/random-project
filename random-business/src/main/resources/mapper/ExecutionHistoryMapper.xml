@@ -11,7 +11,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="runResult"   column="RUN_RESULT"/>
 		<result property="isExport"   column="IS_EXPORT"   />
 		<result property="runTime"   column="RUN_TIME"   />
-		<result property="deleteTime"   column="DELETE_TIME"   />
 		<result property="exportTime"   column="EXPORT_TIME"   />
 	</resultMap>
 
@@ -23,7 +22,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         RUN_RESULT,
         IS_EXPORT,
         RUN_TIME,
-        DELETE_TIME,
         EXPORT_TIME
         FROM
         EXECUTION_HISTORY
@@ -32,12 +30,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND ID = #{id}
             </if>
             <if test="randomCategory != null and randomCategory != '' ">
-                AND RANDOM_CATEGORY = #{randomCategory}
+                AND RANDOM_CATEGORY LIKE CONCAT('%', #{randomCategory}, '%')
             </if>
             <if test="byUser != null and byUser != '' ">
                 AND BY_USER = #{byUser}
             </if>
+            <if test="startTime != null and startTime != '' ">
+                AND RUN_TIME &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != '' ">
+                AND RUN_TIME &lt;= #{endTime}
+            </if>
         </where>
+        ORDER BY RUN_TIME DESC
     </select>
 
     <insert id="addHistoryByAll" parameterType="com.example.business.entity.DTO.HistoryDTO">

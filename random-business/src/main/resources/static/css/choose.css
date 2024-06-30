@@ -1,27 +1,69 @@
-/* 将页面内容绝对定位，相对于浏览器视口 */
+/* 设置 h1 元素的大小和位置 */
 body {
-  position: relative;
-  min-height: 100vh; /* 至少占满整个视口高度 */
-  margin: 0; /* 去除默认的页面边距 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+	/* background-color: #f0f0f0; */
 }
-/* 设置页面内容的位置和大小 */
-.container {
-  position: absolute;
-  top: 50%; /* 上边缘位于视口的中间 */
-  left: 50%; /* 左边缘位于视口的中间 */
-  transform: translate(-50%, -50%); /* 使用 translate() 函数进行居中 */
-  max-width: 600px; /* 最大宽度 */
-  width: 90%; /* 宽度为视口宽度的90% */
-  padding: 20px; /* 添加内边距 */
-  text-align: center; /* 文本居中 */
+#chooseTest {
+    font-size: 50px; /* 字体大小 */
+    width: 1000px; /* 宽度 */
+    height: 50px; /* 高度 */
+    position: relative; /* 相对定位 */
+	top: -120px; /* 距离顶部位置 */
+	left: 0px; /* 距离左侧位置 */
+	text-align: center;
+	display: block;
+	
 }
 
-/* 样式化标题 */
-h1 {
-  font-size: 24px;
+/* 设置 select 元素的大小和位置 */
+#options {
+	font-size: 15px;
+    width: 250px; /* 宽度 */
+    height: 40px; /* 高度 */
+    position: relative; /* 相对定位 */
+    top: -50px; /* 距离顶部位置 */
+    left: 0px; /* 距离左侧位置 */
+	border: 1px solid #ccc; /* 边框 */
+	border-radius: 5px;
+}
+select#options:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 悬停时的阴影效果 */
 }
 
-/* 样式化下拉列表和按钮 */
-#options, #startButton {
-  margin-top: 20px; /* 顶部间距 */
+/* 设置 button 元素的大小和位置 */
+#startButton {
+    font-size: 20px;
+    width: 200px; /* 宽度 */
+    height: 100px; /* 高度 */
+    position: relative; /* 相对定位 */
+    top: 50px; /* 距离顶部位置 */
+    left: 0px; /* 距离左侧位置 */
+    background-color: #007bff; /* 按钮背景色 */
+    color: white; /* 按钮文字颜色 */
+    border: none; /* 无边框 */
+    border-radius: 10px; /* 圆角 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 按钮阴影 */
+    cursor: pointer; /* 鼠标指针样式 */
+    transition: background-color 0.3s, transform 0.3s; /* 过渡效果 */
+}
+#startButton:hover {
+    background-color: #0056b3; /* 悬停时背景色 */
+    transform: translateY(+5px); /* 悬停时上移 */
+}
+#startButton:active {
+    background-color: #003f7f; /* 点击时背景色 */
+    transform: translateY(2px); /* 点击时下移 */
+}
+button#startButton.disabled {
+    background-color: #aaa; /* 灰色背景色 */
+    cursor: not-allowed; /* 禁用指针样式 */
+}
+
+option{
+	font-size: 15px;
 }

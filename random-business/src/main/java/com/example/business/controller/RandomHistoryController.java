@@ -48,8 +48,8 @@ public class RandomHistoryController {
      * @return
      */
     @ApiOperation(value = "获取历史记录详情", response = HistoryOptionVO.class)
-    @GetMapping("/historyOption")
-    public Result getHistoryOption(String historyId){
+    @GetMapping("/historyOption/{historyId}")
+    public Result getHistoryOption(@PathVariable String historyId){
         return Result.success(historyService.getHistoryOption(historyId));
     }
 
@@ -59,8 +59,8 @@ public class RandomHistoryController {
      * @return
      */
     @ApiModelProperty(value = "批量删除历史记录")
-    @DeleteMapping("historyClean")
-    public Result removeHistories(List<String> ids) {
+    @DeleteMapping("/historyClean")
+    public Result removeHistories(@RequestBody List<String> ids) {
         return historyService.moveHistoryByIds(ids) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
@@ -71,8 +71,9 @@ public class RandomHistoryController {
      * @return
      */
     @ApiModelProperty(value = "清空历史记录")
-    @DeleteMapping("historyCleanAll")
+    @DeleteMapping("/historyCleanAll")
     public Result cleanAllHistories(String byUser) {
+        byUser = UtilsConstants.ADMIN_USER;
         return historyService.moveHistoryAllByUser(byUser) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }

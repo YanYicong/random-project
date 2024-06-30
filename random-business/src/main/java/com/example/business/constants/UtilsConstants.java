@@ -52,4 +52,10 @@ public class UtilsConstants {
      */
     public static final int DATABASE_OPERA_ERROR = 0;
 
+    /**
+     * 请求成功响应码
+     */
+    public static final int REQUEST_SUCCESS = 200;
+
+
 }

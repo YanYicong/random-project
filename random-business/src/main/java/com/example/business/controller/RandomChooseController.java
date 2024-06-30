@@ -26,11 +26,11 @@ public class RandomChooseController {
     private RandomChooseService randomChooseService;
 
     /**
-     * 根据条件获取随机项组和选项(1.0无用户)
+     * 根据条件获取随机项组和选项(1.0无用户)(包括已删除和未删除条件)
      */
     @ApiOperation(value = "获取随机项组及其随机项", response = CategoryVO.class)
-    @GetMapping("/categories")
-    public Result getCategories(CategoryDTO categoryDTO){
+    @PostMapping("/categories")
+    public Result getCategories(@RequestBody CategoryDTO categoryDTO){
         return Result.success(randomChooseService.getAllCategories(categoryDTO));
     }
 
@@ -39,8 +39,8 @@ public class RandomChooseController {
      * 执行随机选择
      */
     @ApiOperation(value = "执行随机选项", response = ChooseEntity.class)
-    @PostMapping("/startRandom")
-    public Result getRandomResult(String categoryId) throws ProportionException, NoSuchAlgorithmException {
+    @PostMapping("/startRandom/{categoryId}")
+    public Result getRandomResult(@PathVariable String categoryId) throws ProportionException, NoSuchAlgorithmException {
         return Result.success(randomChooseService.getStartResult(categoryId));
     }
 }

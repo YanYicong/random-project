@@ -30,4 +30,10 @@ public class HistoryDTO {
     @ApiModelProperty("执行时间")
     private LocalDateTime runTime;
 
+    @ApiModelProperty("开始时间")
+    private String startTime;
+
+    @ApiModelProperty("结束时间")
+    private String endTime;
+
 }

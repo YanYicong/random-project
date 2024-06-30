@@ -48,5 +48,17 @@ public interface RandomCategoryMapper {
      */
     public int deleteCategoryByIsApply();
 
+    /**
+     * 根据用户恢复所有逻辑删除的组
+     * @param byUser
+     * @return
+     */
+    public int updateRestoreCategory(String byUser);
+
+    /**
+     * 根据用户永久删除所有组
+     * @return
+     */
+    public int deleteAllByUser(String byUser);
 
 }

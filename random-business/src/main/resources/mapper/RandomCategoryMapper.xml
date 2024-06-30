@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="isApply"   column="IS_APPLY"   />
 	</resultMap>
 
+
     <select id="findAllCategory" resultMap="CategoryResult">
         SELECT
         ID,
@@ -32,10 +33,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="byUser != null and byUser != '' ">
                 AND BY_USER = #{byUser}
             </if>
-            <if test="isApply != null and isApply != '' ">
+            <if test="isApply != null ">
                 AND IS_APPLY = #{isApply}
             </if>
         </where>
+        ORDER BY CREATE_TIME DESC
     </select>
 
     <insert id="insertCategory" parameterType="com.example.business.entity.DTO.CategoryDTO">
@@ -60,7 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="categoryName != null and categoryName != ''">
                 CATEGORY_NAME = #{categoryName},
             </if>
-            <if test="isApply != null and isApply != ''">
+            <if test="isApply != null">
                 IS_APPLY = #{isApply},
             </if>
             UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
@@ -76,6 +78,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteCategoryByIsApply">
         DELETE FROM RANDOM_CATEGORY
         WHERE IS_APPLY = 1
+    </delete>
+
+    <update id="updateRestoreCategory">
+        UPDATE RANDOM_CATEGORY
+        SET IS_APPLY = 0
+        WHERE BY_USER = #{byUser}
+    </update>
+
+    <delete id="deleteAllByUser">
+        DELETE FROM RANDOM_CATEGORY
+        WHERE IS_APPLY = 1 AND BY_USER = #{byUser}
     </delete>
 
 </mapper>

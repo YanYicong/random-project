@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>Random Category</title>
+<link rel="stylesheet" href="css/category.css">
+</head>
+<body>
+    <div class="ctrl-container">
+        <button id="delete-button" class="delete-button">删除</button>
+        <button id="has-deleted-button" class="has-deleted-button">回收站</button>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span id="close-btn" class="close">&times;</span>
+                <h2 class="modal-title">回收站</h2>
+				<div class="ctrl-button">
+					<button id="restore-button" class="restore-button">恢复</button>
+					<button id="clear-button" class="clear-button">删除</button>
+					<button id="restore-all-button" class="restore-button">恢复全部</button>
+					<button id="clear-all-button" class="clear-button">删除全部</button>
+				</div>
+                <div class="container-inner">
+                    <ul class="list-inner" id="left-list-inner"></ul>
+                    <ul class="list-inner" id="right-list-inner"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <ul class="list" id="left-list"></ul>
+        <ul class="list" id="right-list"></ul>
+    </div>
+    <script>
+        $(document).ready(function() {
+            var currentCategoryID = null;
+            var leftList = $('#left-list');
+            var rightList = $('#right-list');
+
+            function fetchAndPopulateLeftList() {
+                $.ajax({
+                    url: 'http://127.0.0.1:8001/random/choosePage/categories',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ isApply: 0 }),
+                    success: function(data) {
+                        leftList.empty();
+                        $.each(data.data, function(index, category) {
+                            var categoryItem = $('<li>')
+                                .text(category.categoryName)
+                                .attr('draggable', true)
+                                .data('options', category.option)
+                                .data('category-id', category.id)
+                                .on('click', function() {
+                                    currentCategoryID = $(this).data('category-id');
+                                    populateRightList($(this).data('options'), currentCategoryID);
+                                    leftList.find('li').removeClass('selected');
+                                    $(this).addClass('selected');
+                                })
+                                .on('dblclick', function() {
+                                    var newName = prompt("请输入新名称", $(this).text());
+                                    if (newName !== null) {
+                                        saveCategoryOrOption('category', currentCategoryID, $(this).data('category-id'), newName);
+                                        $(this).text(newName);
+                                    }
+                                });
+                            leftList.append(categoryItem);
+                        });
+                        var addButton = $('<li>')
+                            .text('+')
+                            .attr('id', 'left-add-button')
+                            .on('click', function() {
+                                var inputItem = $('<li>')
+                                    .attr('contenteditable', true)
+                                    .on('blur', function() {
+                                        var newCategoryName = $(this).text().trim();
+                                        if (newCategoryName) {
+                                            saveNewCategory(newCategoryName);
+                                        } else {
+                                            $(this).remove();
+                                            $('#left-add-button').show();
+                                        }
+                                    });
+                                $(this).before(inputItem);
+                                inputItem.focus();
+                                $(this).hide();
+                            });
+                        leftList.append(addButton);
+                    }
+                });
+            }
+
+            function populateRightList(options, categoryID) {
+                rightList.empty();
+                $.each(options, function(index, option) {
+                    var displayText = option.optionName;
+                    if (option.probabilityProportion) {
+                        displayText += ` (${option.probabilityProportion})`;
+                    }
+                    var optionItem = $('<li>')
+                        .text(displayText)
+                        .attr('draggable', true)
+                        .data('category-id', categoryID)
+                        .data('option-id', option.id)
+                        .data('probability-proportion', option.probabilityProportion || '')
+                        .on('click', function() {
+                            rightList.find('li').removeClass('selected');
+                            $(this).addClass('selected');
+                        })
+                        .on('dblclick', function() {
+                            var currentName = $(this).text().split(' (')[0];
+                            var currentProbability = $(this).data('probability-proportion');
+
+                            var newName = prompt("请输入新名称", currentName);
+                            if (newName === null) newName = currentName;  // If name edit is cancelled, keep the old name
+                            var newProbability = prompt("请输入新比例", currentProbability);
+                            if (newProbability !== null) {
+                                saveCategoryOrOption('option', categoryID, optionItem.data('option-id'), newName, newProbability);
+                                var displayText = newName;
+                                if (newProbability) {
+                                    displayText += ` (${newProbability})`;
+                                }
+                                $(this).text(displayText);
+                                $(this).data('probability-proportion', newProbability);
+                            }
+                        });
+                    rightList.append(optionItem);
+                });
+                var addButton = $('<li>')
+                    .text('+')
+                    .attr('id', 'right-add-button')
+                    .on('click', function() {
+                        var inputItem = $('<li>')
+                            .attr('contenteditable', true)
+                            .on('blur', function() {
+                                var newOptionName = $(this).text().trim();
+                                if (newOptionName) {
+                                    saveNewOption(newOptionName, categoryID);
+                                } else {
+                                    $(this).remove();
+                                    $('#right-add-button').show();
+                                }
+                            });
+                        $(this).before(inputItem);
+                        inputItem.focus();
+                        $(this).hide();
+                    });
+                rightList.append(addButton);
+            }
+
+            function saveCategoryOrOption(type, categoryID, id, newName, newProbability) {
+                let url;
+                let data;
+                if (type === 'category') {
+                    url = 'http://127.0.0.1:8001/random/randomOption/randomCategory';
+                    data = { id: id, categoryName: newName };
+                } else {
+                    url = 'http://127.0.0.1:8001/random/randomOption/randomOption';
+                    data = { id: id, optionName: newName, inCategory: categoryID, probabilityProportion: newProbability };
+                }
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function() {
+                        fetchAndPopulateLeftList();
+                    }
+                });
+            }
+
+            function fetchAndPopulateRightList() {
+                $.ajax({
+                    url: 'http://127.0.0.1:8001/random/choosePage/categories',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ isApply : 0 }),
+                    success: function(data) {
+                        const category = data.data.find(cat => cat.id === categoryID);
+                        if (category) {
+                            populateRightList(category.option, categoryID);
+                        }
+                    }
+                });
+            }
+
+            function saveNewCategory(newCategoryName) {
+                $.ajax({
+                    url: 'http://127.0.0.1:8001/random/randomOption/randomCategory',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ categoryName: newCategoryName }),
+                    success: function() {
+                        fetchAndPopulateLeftList();
+                    }
+                });
+            }
+
+            function saveNewOption(newOptionName, categoryID) {
+                $.ajax({
+                    url: 'http://127.0.0.1:8001/random/randomOption/randomOption',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ optionName: newOptionName, inCategory: categoryID }),
+                    success: function() {
+                        fetchAndPopulateLeftList();
+                        fetchAndPopulateRightList();
+                    }
+                });
+            }
+
+            $('#delete-button').on('click', function() {
+                var selectedRight = rightList.find('li.selected');
+                var selectedLeft = leftList.find('li.selected');
+
+                if (selectedRight.length > 0) {
+                    var optionID = selectedRight.data('option-id');
+                    deleteCategoryOrOption('option', optionID);
+                } else if (selectedLeft.length > 0) {
+                    var categoryID = selectedLeft.data('category-id');
+                    deleteCategoryOrOption('category', categoryID);
+                }
+            });
+
+            function deleteCategoryOrOption(type, id) {
+                let url;
+                if (type === 'category') {
+                    url = 'http://127.0.0.1:8001/random/randomOption/randomCategory';
+                } else {
+                    url = 'http://127.0.0.1:8001/random/randomOption/randomOption';
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ id: id, isApply: 1 }),
+                    success: function() {
+                        fetchAndPopulateLeftList();
+                    }
+                });
+            }
+
+            fetchAndPopulateLeftList();
+        });
+
+        document.getElementById('has-deleted-button').addEventListener('click', function() {
+            // 显示模态窗口
+            document.getElementById('modal').style.display = 'block';
+
+            // 当前选择的类别ID
+            var currentCategoryID = null;
+            var leftListInner = $('#left-list-inner');
+            var rightListInner = $('#right-list-inner');
+
+            // 获取并填充模态窗口左侧列表的数据
+            function fetchAndPopulateLeftInnerList() {
+                $.ajax({
+                    url: 'http://127.0.0.1:8001/random/choosePage/categories',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ isApply: 1 }),
+                    success: function(data) {
+                        leftListInner.empty();
+                        $.each(data.data, function(index, category) {
+                            var categoryItem = $('<li>')
+                                .text(category.categoryName)
+                                .attr('draggable', true)
+                                .data('options', category.option)
+                                .data('category-id', category.id)
+                                .on('click', function() {
+                                    currentCategoryID = $(this).data('category-id');
+                                    populateRightInnerList($(this).data('options'), currentCategoryID);
+                                    leftListInner.find('li').removeClass('selected');
+                                    $(this).addClass('selected');
+                                });
+                            leftListInner.append(categoryItem);
+                        });
+                    }
+                });
+            }
+
+            // 填充模态窗口右侧列表的数据
+            function populateRightInnerList(options, categoryID) {
+                rightListInner.empty();
+                $.each(options, function(index, option) {
+                    var optionItem = $('<li>')
+                        .text(option.optionName)
+                        .attr('draggable', true)
+                        .data('category-id', categoryID)
+                        .data('option-id', option.id)
+                        .on('click', function() {
+                            rightListInner.find('li').removeClass('selected');
+                            $(this).addClass('selected');
+                        });
+                    rightListInner.append(optionItem);
+                });
+            }
+
+            function cleanAll() {
+                $.ajax({
+                    url: 'http://127.0.0.1:8001/random/randomOption/killAll',
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    success: function() {
+                        fetchAndPopulateLeftInnerList();
+                        populateRightInnerList();
+                    }
+                });
+            }
+
+            function restoreAll() {
+                $.ajax({
+                    url: 'http://127.0.0.1:8001/random/randomOption/restoreAll',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    success: function() {
+                        fetchAndPopulateLeftInnerList();
+                        populateRightInnerList();
+                    }
+                });
+            }
+
+            function restoreCategoryOrOption(type, id) {
+                let url;
+                if (type === 'category') {
+                    url = 'http://127.0.0.1:8001/random/randomOption/randomCategory';
+                } else {
+                    url = 'http://127.0.0.1:8001/random/randomOption/randomOption';
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ id: id, isApply: 0 }),
+                    success: function() {
+                        fetchAndPopulateLeftInnerList();
+                        populateRightInnerList();
+                    }
+                });
+            }
+
+            function cleanCategoryOrOption(type, id) {
+                let url;
+                if (type === 'category') {
+                    url = 'http://127.0.0.1:8001/random/randomOption/delRandomCategory';
+                } else {
+                    url = 'http://127.0.0.1:8001/random/randomOption/delRandomOption';
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: { id: id },
+                    success: function() {
+                        fetchAndPopulateLeftInnerList();
+                        populateRightInnerList();
+                    }
+                });
+            }
+
+            $('#clear-button').on('click', function() {
+                var selectedRight = rightListInner.find('li.selected');
+                var selectedLeft = leftListInner.find('li.selected');
+
+                if (selectedRight.length > 0) {
+                    var optionID = selectedRight.data('option-id');
+                    cleanCategoryOrOption('option', optionID);
+                } else if (selectedLeft.length > 0) {
+                    var categoryID = selectedLeft.data('category-id');
+                    cleanCategoryOrOption('category', categoryID);
+                }
+            });
+
+            $('#restore-button').on('click', function() {
+                var selectedRight = rightListInner.find('li.selected');
+                var selectedLeft = leftListInner.find('li.selected');
+
+                if (selectedRight.length > 0) {
+                    var optionID = selectedRight.data('option-id');
+                    restoreCategoryOrOption('option', optionID);
+                } else if (selectedLeft.length > 0) {
+                    var categoryID = selectedLeft.data('category-id');
+                    restoreCategoryOrOption('category', categoryID);
+                }
+            });
+
+            $('#restore-all-button').on('click', function() {
+                restoreAll();
+            });
+
+            $('#clear-all-button').on('click', function() {
+                cleanAll();
+            });
+
+            fetchAndPopulateLeftInnerList();
+            populateRightInnerList();
+        });
+
+        document.getElementById('close-btn').addEventListener('click', function() {
+            // 关闭模态窗口
+            document.getElementById('modal').style.display = 'none';
+            window.location.reload();
+        });
+
+        // 点击窗口外部关闭模态窗口
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('modal')) {
+                document.getElementById('modal').style.display = 'none';
+                window.location.reload();
+            }
+        };
+
+    </script>
+</body>
+</html>

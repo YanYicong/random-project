@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <title>Random</title>
   <link rel="stylesheet" href="css/index.css">
 </head>
@@ -21,21 +22,23 @@
 
 <div class="content" id="content">
   <div id="tab0">
-	  <h1 class="default">卷</h1>
+    <h1 class="default">卷</h1>
   </div>
   <div id="tab1" style="display: none;">
-    <iframe src="choose.html" frameborder="0" scrolling="no"></iframe>
+    <iframe id="iframe-tab1" src="choose.html" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
   </div>
   <div id="tab2" style="display: none;">
-    <h2>Content of Tab 2</h2>
-    <p>This is the content of Tab 2.</p>
+    <iframe id="iframe-tab2" src="category.html" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
+  </div>
+  <div id="tab3" style="display: none;">
+    <iframe id="iframe-tab3" src="history.html" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
   </div>
 </div>
 
 <script>
-	// 默认活动的标签
+  // 默认活动的标签
   document.getElementById('tab0').classList.add('active');
-	
+  
   function showTab(tabId) {
     const tabs = document.querySelectorAll('.tab');
     const content = document.querySelectorAll('.content > div');
@@ -48,11 +51,15 @@
       tabContent.style.display = 'none';
     });
 
+    // // 检查是否是“历史记录”标签
+    // if (tabId === 'tab3') {
+    //   const iframe = document.getElementById('iframe-tab3');
+    //   iframe.src = iframe.src; // 重新加载iframe
+    // }
+
     document.getElementById(tabId).style.display = 'block';
-    document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+    document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
   }
-  
-  
 </script>
 
 </body>
