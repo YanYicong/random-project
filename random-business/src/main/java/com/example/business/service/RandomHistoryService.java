@@ -1,6 +1,7 @@
 package com.example.business.service;
 
 import com.example.business.entity.DTO.HistoryDTO;
+import com.example.business.entity.HistoryEntity;
 import com.example.business.entity.VO.HistoryOptionVO;
 import com.example.business.entity.VO.HistoryVO;
 

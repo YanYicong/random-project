@@ -55,8 +55,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="optionName != null and optionName != ''">
                 OPTION_NAME = #{optionName},
             </if>
-            <if test="probabilityProportion != null and probabilityProportion != ''">
-                PROBABILITY_PROPORTION = #{probabilityProportion},
+            <if test="probabilityProportion != null" >
+                <choose>
+                    <when test="probabilityProportion == 200">
+                        PROBABILITY_PROPORTION = null,
+                    </when>
+                    <otherwise>
+                        PROBABILITY_PROPORTION = #{probabilityProportion},
+                    </otherwise>
+                </choose>
             </if>
             <if test="inCategory != null and inCategory != ''">
                 IN_CATEGORY = #{inCategory},
@@ -81,7 +88,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="updateByCategoryId" parameterType="string">
         UPDATE RANDOM_CATEGORY_OPTION
-        SET IS_APPLY =
+        SET UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),
+        IS_APPLY =
         CASE
             WHEN IS_APPLY = 0 THEN 1
             WHEN IS_APPLY = 1 THEN 0
@@ -96,7 +104,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="updateRestoreOption">
         UPDATE RANDOM_CATEGORY_OPTION
-        SET IS_APPLY = 0
+        SET IS_APPLY = 0,
+        UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
         WHERE IN_CATEGORY = #{id}
     </update>
 
@@ -104,4 +113,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         DELETE FROM RANDOM_CATEGORY_OPTION
         WHERE IN_CATEGORY = #{id} AND IS_APPLY = 1
     </delete>
+
+    <insert id="insertCategoryOptions" parameterType="list">
+        INSERT INTO RANDOM_CATEGORY_OPTION
+        (
+        ID,
+        OPTION_NAME,
+        PROBABILITY_PROPORTION,
+        IN_CATEGORY,
+        CREATE_TIME,
+        IS_APPLY
+        )
+        VALUES
+        <foreach collection="list" item="categoryOptionDTO" separator=",">
+        (
+        #{categoryOptionDTO.id},
+        #{categoryOptionDTO.optionName},
+        #{categoryOptionDTO.probabilityProportion},
+        #{categoryOptionDTO.inCategory},
+        DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),
+        0
+        )
+        </foreach>
+    </insert>
 </mapper>

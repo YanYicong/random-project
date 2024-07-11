@@ -90,6 +90,50 @@ body {
     background-color: #003f7f; /* 点击时背景色 */
 }
 
+.import-button {
+    padding: 10px; /* 添加内边距 */
+    font-size: 16px; /* 字体大小 */
+    margin-right: 20px;
+    background-color: #007bff; /* 按钮背景色 */
+    color: white; /* 按钮文字颜色 */
+    border: none; /* 无边框 */
+    border-radius: 10px; /* 圆角 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 按钮阴影 */
+    cursor: pointer; /* 鼠标指针样式 */
+    transition: background-color 0.3s, transform 0.3s; /* 过渡效果 */
+    width: 100px;
+}
+
+.import-button:hover {
+    background-color: #0056b3; /* 悬停时背景色 */
+}
+
+.import-button:active {
+    background-color: #003f7f; /* 点击时背景色 */
+}
+
+.template-button {
+    padding: 10px; /* 添加内边距 */
+    font-size: 16px; /* 字体大小 */
+    margin-right: 20px;
+    background-color: #007bff; /* 按钮背景色 */
+    color: white; /* 按钮文字颜色 */
+    border: none; /* 无边框 */
+    border-radius: 10px; /* 圆角 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 按钮阴影 */
+    cursor: pointer; /* 鼠标指针样式 */
+    transition: background-color 0.3s, transform 0.3s; /* 过渡效果 */
+    width: 100px;
+}
+
+.template-button:hover {
+    background-color: #0056b3; /* 悬停时背景色 */
+}
+
+.template-button:active {
+    background-color: #003f7f; /* 点击时背景色 */
+}
+
 .has-deleted-button {
     padding: 10px; /* 添加内边距 */
     font-size: 16px; /* 字体大小 */

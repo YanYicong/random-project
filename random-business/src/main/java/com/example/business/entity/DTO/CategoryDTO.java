@@ -2,10 +2,15 @@ package com.example.business.entity.DTO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @ApiModel("随机项组入参")
+@Builder
+@AllArgsConstructor
 public class CategoryDTO {
 
     @ApiModelProperty("id")

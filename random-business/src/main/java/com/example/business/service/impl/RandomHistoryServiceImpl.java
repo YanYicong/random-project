@@ -37,7 +37,12 @@ public class RandomHistoryServiceImpl implements RandomHistoryService {
      */
     @Override
     public List<HistoryVO> getHistory(HistoryDTO historyDTO) {
-//        todo
+//        校验查询参数
+        if (StringUtils.isNotNull(historyDTO.getEndTime()) && StringUtils.isNotNull(historyDTO.getStartTime())) {
+            if((historyDTO.getStartTime().compareTo(historyDTO.getEndTime())) < 0){
+                log.info("开始时间不能大于结束时间！");
+            }
+        }
         return executionHistoryMapper.findHistoryByAll(historyDTO);
     }
 

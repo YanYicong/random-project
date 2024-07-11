@@ -90,21 +90,30 @@ public class RandomChooseServiceImpl implements RandomChooseService {
     @Override
     @Transactional
     public ChooseEntity getStartResult(String categoryId) throws ProportionException,NoSuchAlgorithmException{
-//        1、获取参与随机的数据
+//        0、获取参与随机的数据
         ChooseEntity chooseParam = new ChooseEntity();
         chooseParam.setIsApply(UtilsConstants.isApplyStatic);
         chooseParam.setInCategory(categoryId);
         List<ChooseEntity> randomData = randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(chooseParam);
         log.info("随机数据获取成功");
+//        1、数据校验，校验比例正确性
+        BigDecimal sumProportion = BigDecimal.ZERO;
+        boolean flag = false;
+        for (ChooseEntity choose : randomData) {
+            if(StringUtils.isNull(choose.getProbabilityProportion())){
+                flag = true;
+                continue;
+            }
+            sumProportion = sumProportion.add(choose.getProbabilityProportion());
+        }
+        if(!flag && sumProportion.intValue() < UtilsConstants.PROPORTION_FULL){
+            log.info("比例值总和不足100，请重新配置！");
+        }
+        if (sumProportion.intValue() > UtilsConstants.PROPORTION_FULL) {
+            log.info("比例值超过100，请重新配置！");
+        }
 //        2、开始随机并获取结果
         ChooseEntity result = random(randomData);
-//        try {
-//            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
-//            int randomInt = secureRandom.nextInt(randomData.size());
-//            result = randomData.get(randomInt);
-//        }catch (NoSuchAlgorithmException e){
-//            ;
-//        }
         log.info("随机结果获取成功");
 //        3、使用随机结果构建条件并存入历史记录和历史记录详情
         String categoryName = randomCategoryMapper.findAllCategory

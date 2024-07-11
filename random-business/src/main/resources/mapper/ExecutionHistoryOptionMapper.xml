@@ -10,6 +10,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="probability" column="PROBABILITY"/>
     </resultMap>
 
+    <resultMap id="ReportHistoryEntity" type="com.example.business.entity.HistoryEntity">
+        <id property="id" column="ID"/>
+        <result property="randomCategory" column="RANDOM_CATEGORY"/>
+        <result property="runResult" column="RUN_RESULT"/>
+        <result property="runTime" column="RUN_TIME" />
+        <result property="optionName" column="OPTION_NAME"/>
+        <result property="probability" column="PROBABILITY"/>
+    </resultMap>
+
     <select id="findHistoryByHistoryId" resultMap="HistoryOptionResult">
         SELECT
         ID,
@@ -47,5 +56,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{historyId}
         </foreach>
     </delete>
+
+    <delete id="deleteHistoryOptionAll">
+        DELETE FROM EXECUTION_HISTORY_OPTION
+    </delete>
+
+    <select id="getHistoryAndOption" resultMap="ReportHistoryEntity">
+        SELECT
+        a.ID AS ID,
+        a.RANDOM_CATEGORY AS RANDOM_CATEGORY,
+        a.RUN_RESULT AS RUN_RESULT,
+        a.RUN_TIME AS RUN_TIME,
+        b.OPTION_NAME AS OPTION_NAME,
+        CONCAT(FORMAT(b.PROBABILITY,2), '%') AS PROBABILITY
+        FROM EXECUTION_HISTORY_OPTION b
+        LEFT JOIN EXECUTION_HISTORY a
+        ON b.HISTORY_ID = a.ID
+        <where>
+            <if test="byUser != null and byUser != ''">
+                a.BY_USER = #{byUser}
+            </if>
+        </where>
+        ORDER BY a.ID
+
+    </select>
 
 </mapper>

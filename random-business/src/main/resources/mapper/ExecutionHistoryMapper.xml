@@ -74,4 +74,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         DELETE FROM EXECUTION_HISTORY
         WHERE BY_USER = #{byUser}
     </delete>
+
+    <delete id="deleteHistoryAll">
+        DELETE FROM EXECUTION_HISTORY
+    </delete>
+
 </mapper>

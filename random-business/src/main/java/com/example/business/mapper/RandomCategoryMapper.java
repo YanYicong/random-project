@@ -61,4 +61,9 @@ public interface RandomCategoryMapper {
      */
     public int deleteAllByUser(String byUser);
 
+    /**
+     * 批量新增
+     */
+    public int insertCategories(List<CategoryDTO> categoryDTOS);
+
 }

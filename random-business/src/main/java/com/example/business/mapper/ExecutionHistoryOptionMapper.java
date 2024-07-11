@@ -1,6 +1,8 @@
 package com.example.business.mapper;
 
+import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.DTO.HistoryOptionDTO;
+import com.example.business.entity.HistoryEntity;
 import com.example.business.entity.VO.HistoryOptionVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -34,4 +36,16 @@ public interface ExecutionHistoryOptionMapper {
      */
     public int deleteHistoryOptionByHistoryIds(List<String> historyIds);
 
+    /**
+     * 清空所有历史记录
+     * @return
+     */
+    public int deleteHistoryOptionAll();
+
+    /**
+     * 查询所有历史记录和记录详情（导出，非树状结构）
+     * @param historyDTO
+     * @return
+     */
+    public List<HistoryEntity> getHistoryAndOption(HistoryDTO historyDTO);
 }

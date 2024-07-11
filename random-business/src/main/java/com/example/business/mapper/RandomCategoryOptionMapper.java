@@ -1,6 +1,7 @@
 package com.example.business.mapper;
 
 import com.example.business.entity.ChooseEntity;
+import com.example.business.entity.DTO.CategoryOptionDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -71,5 +72,7 @@ public interface RandomCategoryOptionMapper {
      * @return
      */
     public int deleteOptionById(String id);
+
+    public int insertCategoryOptions(List<CategoryOptionDTO> categoryOptions);
 
 }

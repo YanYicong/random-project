@@ -82,7 +82,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="updateRestoreCategory">
         UPDATE RANDOM_CATEGORY
-        SET IS_APPLY = 0
+        SET IS_APPLY = 0,
+        UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
         WHERE BY_USER = #{byUser}
     </update>
 
@@ -90,5 +91,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         DELETE FROM RANDOM_CATEGORY
         WHERE IS_APPLY = 1 AND BY_USER = #{byUser}
     </delete>
+
+    <insert id="insertCategories" parameterType="list">
+        INSERT INTO RANDOM_CATEGORY
+        (
+        ID,
+        CATEGORY_NAME,
+        BY_USER,
+        CREATE_TIME,
+        IS_APPLY
+        )
+        VALUES
+        <foreach collection="list" item="categoryDTO" separator=",">
+        (
+        #{categoryDTO.id},
+        #{categoryDTO.categoryName},
+        #{categoryDTO.byUser},
+        DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),
+        0
+        )
+        </foreach>
+    </insert>
 
 </mapper>

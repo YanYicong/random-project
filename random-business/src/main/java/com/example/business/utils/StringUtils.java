@@ -2,6 +2,7 @@ package com.example.business.utils;
 
 
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -504,5 +505,34 @@ public class StringUtils
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 检查excel文件格式
+     * @param file
+     * @return
+     */
+     public static boolean isExcelXlsx(MultipartFile file) {
+        // 检查文件是否为空
+        if (file == null || file.isEmpty()) {
+            return false;
+        }
+
+        // 检查文件的后缀名
+        String fileName = file.getOriginalFilename();
+        if (fileName != null && fileName.toLowerCase().endsWith(".xlsx")) {
+            // 可以选择性地检查内容类型，但通常基于后缀名已足够
+            String contentType = file.getContentType();
+            if (contentType != null &&
+                (contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") ||
+                 contentType.equals("application/vnd.ms-excel.sheet.macroEnabled.12"))) {
+                return true;
+            }
+            // 如果内容类型不匹配但后缀名匹配，仍然可以认为它是xlsx文件（尽管这种情况较少见）
+            return true;
+        }
+
+        // 如果后缀名不匹配，则不是xlsx文件
+        return false;
     }
 }

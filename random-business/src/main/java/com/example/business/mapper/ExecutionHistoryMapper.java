@@ -1,6 +1,7 @@
 package com.example.business.mapper;
 
 import com.example.business.entity.DTO.HistoryDTO;
+import com.example.business.entity.HistoryEntity;
 import com.example.business.entity.VO.HistoryVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -39,6 +40,13 @@ public interface ExecutionHistoryMapper {
      * @return
      */
     public int deleteHistoryByUser(String byUser);
+
+    /**
+     * 清空所有历史记录
+     * @return
+     */
+    public int deleteHistoryAll();
+
 
 
 }

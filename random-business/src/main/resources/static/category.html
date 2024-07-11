@@ -9,8 +9,11 @@
 </head>
 <body>
     <div class="ctrl-container">
+		<button id="template-button" class="template-button">下载模板</button>
+		<button id="import-button" class="import-button">导入</button>
         <button id="delete-button" class="delete-button">删除</button>
         <button id="has-deleted-button" class="has-deleted-button">回收站</button>
+		<input type="file" id="file-input" style="display: none;" accept=".xlsx">
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span id="close-btn" class="close">&times;</span>
@@ -96,7 +99,7 @@
                 $.each(options, function(index, option) {
                     var displayText = option.optionName;
                     if (option.probabilityProportion) {
-                        displayText += ` (${option.probabilityProportion})`;
+                        displayText += ` (${option.probabilityProportion}%)`;
                     }
                     var optionItem = $('<li>')
                         .text(displayText)
@@ -113,7 +116,7 @@
                             var currentProbability = $(this).data('probability-proportion');
 
                             var newName = prompt("请输入新名称", currentName);
-                            if (newName === null) newName = currentName;  // If name edit is cancelled, keep the old name
+                            if (newName === null) newName = currentName; 
                             var newProbability = prompt("请输入新比例", currentProbability);
                             if (newProbability !== null) {
                                 saveCategoryOrOption('option', categoryID, optionItem.data('option-id'), newName, newProbability);
@@ -222,6 +225,37 @@
                     deleteCategoryOrOption('category', categoryID);
                 }
             });
+			
+			$('#template-button').on('click', function() {
+			    window.location.href = 'http://127.0.0.1:8001/random/randomOption/template';
+			});
+			
+			$('#import-button').on('click', function() {
+			    $('#file-input').click();
+			});
+			
+			$('#file-input').on('change', function(event) {
+			    var file = event.target.files[0];
+			    if (file) {
+			        var formData = new FormData();
+			        formData.append('file', file);
+	
+			        $.ajax({
+			            url: 'http://127.0.0.1:8001/random/randomOption/upload',
+			            type: 'POST',
+			            data: formData,
+			            processData: false,
+			            contentType: false,
+			            success: function(response) {
+			                alert('文件上传成功');
+			                fetchAndPopulateLeftList();
+			            },
+			            error: function(response) {
+			                alert('文件上传失败');
+			            }
+			        });
+			    }
+			});
 
             function deleteCategoryOrOption(type, id) {
                 let url;
@@ -394,6 +428,7 @@
             $('#clear-all-button').on('click', function() {
                 cleanAll();
             });
+			
 
             fetchAndPopulateLeftInnerList();
             populateRightInnerList();

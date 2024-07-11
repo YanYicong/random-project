@@ -1,9 +1,14 @@
 package com.example.business.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.DTO.HistoryDTO;
+import com.example.business.entity.HistoryEntity;
 import com.example.business.entity.VO.HistoryOptionVO;
 import com.example.business.entity.VO.HistoryVO;
+import com.example.business.handler.CustomCellWriteHandler;
+import com.example.business.handler.ExcelMergeHandler;
+import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.service.RandomHistoryService;
 import com.example.business.utils.Result;
 import com.example.business.utils.page.TableDataInfo;
@@ -13,7 +18,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 import static com.example.business.utils.page.PageUtil.startPage;
@@ -28,6 +38,9 @@ public class RandomHistoryController {
 
     @Resource
     public RandomHistoryService historyService;
+
+    @Resource
+    public ExecutionHistoryOptionMapper executionHistoryOptionMapper;
 
     /**
      * 分页查询历史记录
@@ -78,4 +91,42 @@ public class RandomHistoryController {
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
 
+    /**
+     * 历史记录导出
+     * @param
+     * @return
+     */
+    @ApiModelProperty(value = "历史记录导出")
+    @GetMapping("/report")
+    public void historyReport(HttpServletResponse response) throws IOException {
+        // 请求头与导出文件名称准备
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode("history", "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+
+        // 数据准备
+        HistoryDTO historyDTO = HistoryDTO.builder().byUser(UtilsConstants.ADMIN_USER).build();
+        List<HistoryEntity> result = executionHistoryOptionMapper.getHistoryAndOption(historyDTO);
+
+        // 获取模板输入流
+        InputStream templateInputStream = this.getClass().getResourceAsStream("/template/configTemplate.xlsx");
+
+        // 需要合并的列
+        int[] mergeColumnIndex = {0, 1, 2, 3};
+        // 需要从第几行开始合并
+        int mergeRowIndex = 0;
+
+        try (OutputStream out = response.getOutputStream()) {
+            EasyExcel.write(out, HistoryEntity.class)
+                    .autoCloseStream(Boolean.TRUE)
+                    .registerWriteHandler(new ExcelMergeHandler(mergeRowIndex, mergeColumnIndex))
+                    .registerWriteHandler(new CustomCellWriteHandler())
+                    .sheet("history")
+                    .doWrite(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("导出失败", e);
+        }
+    }
 }

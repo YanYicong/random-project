@@ -25,13 +25,13 @@
     <h1 class="default">卷</h1>
   </div>
   <div id="tab1" style="display: none;">
-    <iframe id="iframe-tab1" src="choose.html" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
+    <iframe id="iframe-tab1" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
   </div>
   <div id="tab2" style="display: none;">
-    <iframe id="iframe-tab2" src="category.html" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
+    <iframe id="iframe-tab2" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
   </div>
   <div id="tab3" style="display: none;">
-    <iframe id="iframe-tab3" src="history.html" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
+    <iframe id="iframe-tab3" frameborder="0" scrolling="no" width="1500px" height="580px"></iframe>
   </div>
 </div>
 
@@ -51,15 +51,24 @@
       tabContent.style.display = 'none';
     });
 
-    // // 检查是否是“历史记录”标签
-    // if (tabId === 'tab3') {
-    //   const iframe = document.getElementById('iframe-tab3');
-    //   iframe.src = iframe.src; // 重新加载iframe
-    // }
-
     document.getElementById(tabId).style.display = 'block';
     document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+
+    // 动态设置iframe的src
+    const iframe = document.getElementById(`iframe-${tabId}`);
+    if (iframe) {
+      if (tabId === 'tab1') {
+        iframe.src = 'choose.html';
+      } else if (tabId === 'tab2') {
+        iframe.src = 'category.html';
+      } else if (tabId === 'tab3') {
+        iframe.src = 'history.html';
+      }
+    }
   }
+
+  // 初始显示第一个标签
+  showTab('tab1');
 </script>
 
 </body>

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -57,6 +58,17 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
             return randomCategoryOptionMapper.insertCategoryOption(chooseEntity);
         }else {
 //            2、修改和删除/恢复
+//            2.1、验证比例值是否正确
+            if (StringUtils.isNotNull(chooseEntity.getProbabilityProportion())) {
+                if(chooseEntity.getProbabilityProportion().intValue() > UtilsConstants.PROPORTION_FULL
+                        ||chooseEntity.getProbabilityProportion().intValue() < UtilsConstants.PROPORTION_LIMIT){
+                    log.info("比例值非法！");
+                }
+            }
+//            2.2、如果是修改并且比例置空了那么赋信号值修改
+            if(StringUtils.isNotEmpty(chooseEntity.getInCategory()) && StringUtils.isNull(chooseEntity.getProbabilityProportion())){
+                chooseEntity.setProbabilityProportion(new BigDecimal(UtilsConstants.SET_PROPORTION_NULL));
+            }
             return randomCategoryOptionMapper.updateCategoryOption(chooseEntity);
         }
     }

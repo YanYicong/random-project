@@ -79,10 +79,13 @@
     <div class="search-container">  
         <input id="charInput" type="text" class="search-input" placeholder="组名">  
         <input type="text" class="search-input date-picker" id="start-date" placeholder="起始时间">
-        <input type="text" class="search-input date-picker" id="end-date" placeholder="结束时间">  
-        <button class="search-button" id="search-button">搜索</button>  
-        <button class="delete-button" id="delete-button">删除</button>
-        <button class="clear-button" id="clear-button">清除全部</button>
+        <input type="text" class="search-input date-picker" id="end-date" placeholder="结束时间">
+		<div id="button-container">
+			<button class="search-button" id="search-button">搜索</button>
+			<button class="report-button" id="report-button">导出</button>
+			<button class="delete-button" id="delete-button">删除</button>
+			<button class="clear-button" id="clear-button">清除全部</button>
+		</div>
     </div> 
     <table id="history-table">
         <thead>
@@ -125,6 +128,7 @@
     var currentPage = 1;
     var pageSize = 10;
     var totalRecords = 0;
+    var allData = []; // 用于存储所有查询数据
     var lastSelectedRowIndex = null;
     
     $(document).ready(function() {  
@@ -132,8 +136,19 @@
             var charValue = $('#charInput').val();  
             var startDateValue = $('#start-date').val();  
             var endDateValue = $('#end-date').val(); 
-            fetchDataAndPopulateTable(charValue, startDateValue, endDateValue, currentPage, pageSize);
+			
+            currentPage = 1;
+            fetchData(charValue, startDateValue, endDateValue);
         });
+		
+		$('#report-button').click(function(){
+			 $(this).prop('disabled', true);
+			reportDate().done(function(){
+				$('#report-button').prop('disabled', false);
+			}).fail(function(){
+				$('#report-button').prop('disabled', false);
+			});
+		});
     
         $('#delete-button').click(function() {
             var selectedIds = getSelectedIds();
@@ -154,10 +169,7 @@
         $('#prev-page').click(function() {
             if (currentPage > 1) {
                 currentPage--;
-                var charValue = $('#charInput').val();
-                var startDateValue = $('#start-date').val();
-                var endDateValue = $('#end-date').val();
-                fetchDataAndPopulateTable(charValue, startDateValue, endDateValue, currentPage, pageSize);
+                populateTable(currentPage, pageSize);
             }
         });
     
@@ -165,10 +177,7 @@
             var totalPages = Math.ceil(totalRecords / pageSize);
             if (currentPage < totalPages) {
                 currentPage++;
-                var charValue = $('#charInput').val();
-                var startDateValue = $('#start-date').val();
-                var endDateValue = $('#end-date').val();
-                fetchDataAndPopulateTable(charValue, startDateValue, endDateValue, currentPage, pageSize);
+                populateTable(currentPage, pageSize);
             }
         });
     
@@ -198,7 +207,7 @@
         });
     });
     
-    function fetchDataAndPopulateTable(charValue, startDate, endDate, pageNum, pageSize) {  
+    function fetchData(charValue, startDate, endDate) {  
         $.ajax({  
             url: 'http://localhost:8001/random/randomHistory/historyPage',   
             type: 'POST',  
@@ -207,29 +216,61 @@
                 randomCategory: charValue,
                 startTime: startDate,
                 endTime: endDate,
-                pageNum: pageNum,
-                pageSize: pageSize
+                pageNum: 1,
+                pageSize: 10000 // 一次请求所有数据
             },
             success: function(data) {  
                 totalRecords = data.total;
-                var tbody = $('#history-table tbody');  
-                tbody.empty();  
-                $.each(data.rows, function(index, item) {  
-                    var tr = $('<tr>').append(  
-                        $('<td>').text(index + 1 + (pageNum - 1) * pageSize),  
-                        $('<td>').text(item.randomCategory),  
-                        $('<td>').text(item.runResult),  
-                        $('<td>').text(item.runTime),
-                        $('<td>').addClass('hidden-id').text(item.id)
-                    );  
-                    tbody.append(tr);  
-                });  
-                updatePaginationInfo(pageNum, pageSize, totalRecords);
-                attachRowClickEvent();
-                attachRowDblClickEvent();
+                allData = data.rows;
+                populateTable(currentPage, pageSize);
             } 
         });  
     }  
+	
+	function reportDate() {
+	    $.ajax({
+	        url: 'http://localhost:8001/random/randomHistory/report',
+	        type: 'GET',
+	        xhrFields: { responseType: 'blob' },
+	        success: function(data) {
+	            var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	            var link = document.createElement('a');
+	            link.href = window.URL.createObjectURL(blob);
+	            link.download = 'history.xlsx';
+	            document.body.appendChild(link); // 为了 Firefox 支持
+	            link.click();
+	            document.body.removeChild(link);
+	            alert("导出成功！");
+	        },
+	        error: function() {
+	            alert("导出失败！");
+	        }
+	    });
+	}
+
+    
+    function populateTable(pageNum, pageSize) {
+        var tbody = $('#history-table tbody');  
+        tbody.empty();
+        var start = (pageNum - 1) * pageSize;
+        var end = start + pageSize;
+        var pageData = allData.slice(start, end);
+        
+        $.each(pageData, function(index, item) {  
+            var tr = $('<tr>').append(  
+                $('<td>').text(start + index + 1),  
+                $('<td>').text(item.randomCategory),  
+                $('<td>').text(item.runResult),  
+                $('<td>').text(item.runTime),
+                $('<td>').addClass('hidden-id').text(item.id)
+            );  
+            tbody.append(tr);  
+        });
+        
+        updatePaginationInfo(pageNum, pageSize, totalRecords);
+        attachRowClickEvent();
+        attachRowDblClickEvent();
+    }
     
     function updatePaginationInfo(pageNum, pageSize, totalRecords) {
         var totalPages = Math.ceil(totalRecords / pageSize);
@@ -282,7 +323,7 @@
                 var charValue = $('#charInput').val();  
                 var startDateValue = $('#start-date').val();  
                 var endDateValue = $('#end-date').val();
-                fetchDataAndPopulateTable(charValue, startDateValue, endDateValue, currentPage, pageSize);
+                fetchData(charValue, startDateValue, endDateValue);
             }
         });
     }
@@ -296,7 +337,7 @@
                 var charValue = $('#charInput').val();  
                 var startDateValue = $('#start-date').val();  
                 var endDateValue = $('#end-date').val();
-                fetchDataAndPopulateTable(charValue, startDateValue, endDateValue, currentPage, pageSize);
+                fetchData(charValue, startDateValue, endDateValue);
             }
         });
     }
@@ -339,7 +380,7 @@
         });
     });
     
-    fetchDataAndPopulateTable('', '', '', currentPage, pageSize);
+    fetchData('', '', '');
 
 </script>
 </html>

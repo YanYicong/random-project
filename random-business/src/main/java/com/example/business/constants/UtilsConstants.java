@@ -57,5 +57,19 @@ public class UtilsConstants {
      */
     public static final int REQUEST_SUCCESS = 200;
 
+    /**
+     * 比例置空信号值
+     */
+    public static final int SET_PROPORTION_NULL = 200;
+
+    /**
+     * 满比例值
+     */
+    public static final int PROPORTION_FULL = 100;
+
+    /**
+     * 最低比例值
+     */
+    public static final int PROPORTION_LIMIT = 1;
 
 }
