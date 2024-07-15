@@ -5,4 +5,12 @@ package com.example.business.exception;
  */
 public class ParamValidateException extends Throwable{
 
+    public ParamValidateException() {
+
+    }
+
+    public ParamValidateException(String message) {
+        super(message);
+    }
+
 }

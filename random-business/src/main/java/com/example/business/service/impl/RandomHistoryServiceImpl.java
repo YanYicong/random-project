@@ -4,6 +4,8 @@ import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.VO.HistoryOptionVO;
 import com.example.business.entity.VO.HistoryVO;
+import com.example.business.exception.ParamValidateException;
+import com.example.business.exception.ProportionException;
 import com.example.business.mapper.ExecutionHistoryMapper;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.service.RandomHistoryService;
@@ -36,13 +38,14 @@ public class RandomHistoryServiceImpl implements RandomHistoryService {
      * @return
      */
     @Override
-    public List<HistoryVO> getHistory(HistoryDTO historyDTO) {
+    public List<HistoryVO> getHistory(HistoryDTO historyDTO) throws ParamValidateException{
 //        校验查询参数
         if (StringUtils.isNotNull(historyDTO.getEndTime()) && StringUtils.isNotNull(historyDTO.getStartTime())) {
-            if((historyDTO.getStartTime().compareTo(historyDTO.getEndTime())) < 0){
-                log.info("开始时间不能大于结束时间！");
+            if((historyDTO.getStartTime().compareTo(historyDTO.getEndTime())) > 0){
+                throw new ParamValidateException();
             }
         }
+        historyDTO.setByUser(UtilsConstants.ADMIN_USER);
         return executionHistoryMapper.findHistoryByAll(historyDTO);
     }
 

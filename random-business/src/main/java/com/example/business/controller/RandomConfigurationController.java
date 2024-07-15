@@ -9,6 +9,7 @@ import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.entity.DTO.CategoryOptionDTO;
 import com.example.business.exception.ParamValidateException;
+import com.example.business.exception.ProportionException;
 import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomConfigurationService;
@@ -27,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class RandomConfigurationController {
      */
     @ApiOperation("新增/修改/逻辑删除 随机项")
     @PostMapping("/randomOption")
-    public Result saveRandomOption(@RequestBody ChooseEntity chooseEntity){
+    public Result saveRandomOption(@RequestBody ChooseEntity chooseEntity) throws ProportionException {
         return randomConfigurationService.insertAndUpdateOption(chooseEntity) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }

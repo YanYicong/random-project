@@ -219,10 +219,14 @@
                 pageNum: 1,
                 pageSize: 10000 // 一次请求所有数据
             },
-            success: function(data) {  
-                totalRecords = data.total;
-                allData = data.rows;
-                populateTable(currentPage, pageSize);
+            success: function(data) { 
+				if(data.code === 200){
+					totalRecords = data.total;
+					allData = data.rows;
+					populateTable(currentPage, pageSize);
+				}else{
+					alert(data.msg);
+				}
             } 
         });  
     }  
@@ -237,7 +241,7 @@
 	            var link = document.createElement('a');
 	            link.href = window.URL.createObjectURL(blob);
 	            link.download = 'history.xlsx';
-	            document.body.appendChild(link); // 为了 Firefox 支持
+	            document.body.appendChild(link);
 	            link.click();
 	            document.body.removeChild(link);
 	            alert("导出成功！");
@@ -364,7 +368,6 @@
         });
     }
     
-    // Modal handling
     $(document).ready(function() {
         var modal = $('#myModal');
         var span = $('.close');

@@ -5,6 +5,7 @@ import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.entity.VO.CategoryVO;
 import com.example.business.exception.ParamValidateException;
+import com.example.business.exception.ProportionException;
 import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomConfigurationService;
@@ -51,7 +52,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
     }
 
     @Override
-    public int insertAndUpdateOption(ChooseEntity chooseEntity) {
+    public int insertAndUpdateOption(ChooseEntity chooseEntity) throws ProportionException {
 //        1、新增
         if(StringUtils.isEmpty(chooseEntity.getId())){
             chooseEntity.setId(StringUtils.getUUID());
@@ -62,7 +63,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
             if (StringUtils.isNotNull(chooseEntity.getProbabilityProportion())) {
                 if(chooseEntity.getProbabilityProportion().intValue() > UtilsConstants.PROPORTION_FULL
                         ||chooseEntity.getProbabilityProportion().intValue() < UtilsConstants.PROPORTION_LIMIT){
-                    log.info("比例值非法！");
+                    throw new ProportionException();
                 }
             }
 //            2.2、如果是修改并且比例置空了那么赋信号值修改

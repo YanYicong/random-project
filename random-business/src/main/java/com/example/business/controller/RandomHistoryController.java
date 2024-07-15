@@ -6,6 +6,7 @@ import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.HistoryEntity;
 import com.example.business.entity.VO.HistoryOptionVO;
 import com.example.business.entity.VO.HistoryVO;
+import com.example.business.exception.ParamValidateException;
 import com.example.business.handler.CustomCellWriteHandler;
 import com.example.business.handler.ExcelMergeHandler;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
@@ -49,8 +50,7 @@ public class RandomHistoryController {
      */
     @ApiOperation(value = "分页查询历史记录", response = HistoryVO.class)
     @PostMapping("/historyPage")
-    public TableDataInfo getAllHistoryPage(HistoryDTO historyDTO)
-    {
+    public TableDataInfo getAllHistoryPage(HistoryDTO historyDTO) throws ParamValidateException {
         startPage();
         return Result.successPageInfo(historyService.getHistory(historyDTO));
     }

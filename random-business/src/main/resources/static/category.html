@@ -114,22 +114,36 @@
                         .on('dblclick', function() {
                             var currentName = $(this).text().split(' (')[0];
                             var currentProbability = $(this).data('probability-proportion');
-
+            
                             var newName = prompt("请输入新名称", currentName);
                             if (newName === null) newName = currentName; 
-                            var newProbability = prompt("请输入新比例", currentProbability);
-                            if (newProbability !== null) {
-                                saveCategoryOrOption('option', categoryID, optionItem.data('option-id'), newName, newProbability);
-                                var displayText = newName;
-                                if (newProbability) {
-                                    displayText += ` (${newProbability})`;
+                            
+                            var newProbability = null;
+                            while (true) {
+                                newProbability = prompt("请输入新比例 (1-100)", currentProbability);
+                                if (newProbability === null) {
+                                    newProbability = currentProbability;
+                                    break;
                                 }
-                                $(this).text(displayText);
-                                $(this).data('probability-proportion', newProbability);
+                                newProbability = Number(newProbability);
+                                if (!isNaN(newProbability) && newProbability >= 1 && newProbability <= 100) {
+                                    break;
+                                } else {
+                                    alert("请输入有效的比例 (1-100)");
+                                }
                             }
+                            
+                            saveCategoryOrOption('option', categoryID, optionItem.data('option-id'), newName, newProbability);
+                            var displayText = newName;
+                            if (newProbability) {
+                                displayText += ` (${newProbability}%)`;
+                            }
+                            $(this).text(displayText);
+                            $(this).data('probability-proportion', newProbability);
                         });
                     rightList.append(optionItem);
                 });
+
                 var addButton = $('<li>')
                     .text('+')
                     .attr('id', 'right-add-button')
@@ -169,6 +183,7 @@
                     data: JSON.stringify(data),
                     success: function() {
                         fetchAndPopulateLeftList();
+						populateRightList();
                     }
                 });
             }
@@ -182,6 +197,7 @@
                     success: function(data) {
                         const category = data.data.find(cat => cat.id === categoryID);
                         if (category) {
+							fetchAndPopulateLeftList();
                             populateRightList(category.option, categoryID);
                         }
                     }
@@ -196,6 +212,7 @@
                     data: JSON.stringify({ categoryName: newCategoryName }),
                     success: function() {
                         fetchAndPopulateLeftList();
+						populateRightList();
                     }
                 });
             }
@@ -208,7 +225,7 @@
                     data: JSON.stringify({ optionName: newOptionName, inCategory: categoryID }),
                     success: function() {
                         fetchAndPopulateLeftList();
-                        fetchAndPopulateRightList();
+						populateRightList();
                     }
                 });
             }
@@ -272,6 +289,7 @@
                     data: JSON.stringify({ id: id, isApply: 1 }),
                     success: function() {
                         fetchAndPopulateLeftList();
+						populateRightList();
                     }
                 });
             }
