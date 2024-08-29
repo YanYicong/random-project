@@ -3,7 +3,9 @@ package com.example.business.controller;
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.entity.VO.CategoryVO;
-import com.example.business.exception.ProportionException;
+import com.example.business.exception.ParamValidateException;
+import com.example.business.exception.RandomSystemException;
+import com.example.business.exception.ResultNullDataException;
 import com.example.business.service.RandomChooseService;
 import com.example.business.utils.Result;
 import io.swagger.annotations.Api;
@@ -40,7 +42,7 @@ public class RandomChooseController {
      */
     @ApiOperation(value = "执行随机选项", response = ChooseEntity.class)
     @PostMapping("/startRandom/{categoryId}")
-    public Result getRandomResult(@PathVariable String categoryId) throws ProportionException, NoSuchAlgorithmException {
+    public Result getRandomResult(@PathVariable String categoryId) throws NoSuchAlgorithmException, ResultNullDataException, RandomSystemException, ParamValidateException {
         return Result.success(randomChooseService.getStartResult(categoryId));
     }
 }

@@ -73,8 +73,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN EXECUTION_HISTORY a
         ON b.HISTORY_ID = a.ID
         <where>
-            <if test="byUser != null and byUser != ''">
-                a.BY_USER = #{byUser}
+            <if test="randomCategory != null and randomCategory != '' ">
+                AND a.RANDOM_CATEGORY LIKE CONCAT('%', #{randomCategory}, '%')
+            </if>
+            <if test="byUser != null and byUser != '' ">
+                AND a.BY_USER = #{byUser}
+            </if>
+            <if test="startTime != null and startTime != '' ">
+                AND a.RUN_TIME &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != '' ">
+                AND a.RUN_TIME &lt;= #{endTime}
             </if>
         </where>
         ORDER BY a.ID

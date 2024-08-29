@@ -40,12 +40,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         OPTION_NAME,
         IN_CATEGORY,
         CREATE_TIME
+        <if test="probabilityProportion != null">
+            ,PROBABILITY_PROPORTION
+        </if>
         )
         VALUES(
         #{id},
         #{optionName},
         #{inCategory},
         DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+        <if test="probabilityProportion != null">
+            ,#{probabilityProportion}
+        </if>
         )
     </insert>
 

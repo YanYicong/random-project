@@ -1,11 +1,11 @@
 package com.example.business.service.impl;
 
+import com.example.business.constants.ExceptionInfoConstants;
 import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.entity.VO.CategoryVO;
 import com.example.business.exception.ParamValidateException;
-import com.example.business.exception.ProportionException;
 import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomConfigurationService;
@@ -34,7 +34,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
 
     @Override
     @Transactional
-    public int insertAndUpdateCategory(CategoryDTO categoryDTO) throws ParamValidateException{
+    public int insertAndUpdateCategory(CategoryDTO categoryDTO){
 //        1、新增
         if(StringUtils.isEmpty(categoryDTO.getId())){
             categoryDTO.setByUser(UtilsConstants.ADMIN_USER);
@@ -52,7 +52,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
     }
 
     @Override
-    public int insertAndUpdateOption(ChooseEntity chooseEntity) throws ProportionException {
+    public int insertAndUpdateOption(ChooseEntity chooseEntity) throws ParamValidateException {
 //        1、新增
         if(StringUtils.isEmpty(chooseEntity.getId())){
             chooseEntity.setId(StringUtils.getUUID());
@@ -63,7 +63,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
             if (StringUtils.isNotNull(chooseEntity.getProbabilityProportion())) {
                 if(chooseEntity.getProbabilityProportion().intValue() > UtilsConstants.PROPORTION_FULL
                         ||chooseEntity.getProbabilityProportion().intValue() < UtilsConstants.PROPORTION_LIMIT){
-                    throw new ProportionException();
+                    throw new ParamValidateException(ExceptionInfoConstants.PARAM_PROPORTION_OUT_OF_EXCEPTION);
                 }
             }
 //            2.2、如果是修改并且比例置空了那么赋信号值修改

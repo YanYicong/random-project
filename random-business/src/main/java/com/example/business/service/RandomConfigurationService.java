@@ -3,7 +3,6 @@ package com.example.business.service;
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.exception.ParamValidateException;
-import com.example.business.exception.ProportionException;
 
 /**
  * 随机项配置
@@ -22,7 +21,7 @@ public interface RandomConfigurationService {
      * @param chooseEntity
      * @return
      */
-    public int insertAndUpdateOption(ChooseEntity chooseEntity) throws ProportionException;
+    public int insertAndUpdateOption(ChooseEntity chooseEntity) throws ParamValidateException;
 
 
     /**

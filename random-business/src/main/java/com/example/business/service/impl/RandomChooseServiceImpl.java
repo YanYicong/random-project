@@ -1,13 +1,16 @@
 package com.example.business.service.impl;
 
 
+import com.example.business.constants.ExceptionInfoConstants;
 import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.ChooseEntity;
 import com.example.business.entity.DTO.CategoryDTO;
 import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.DTO.HistoryOptionDTO;
 import com.example.business.entity.VO.CategoryVO;
-import com.example.business.exception.ProportionException;
+import com.example.business.exception.ParamValidateException;
+import com.example.business.exception.RandomSystemException;
+import com.example.business.exception.ResultNullDataException;
 import com.example.business.mapper.ExecutionHistoryMapper;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.mapper.RandomCategoryMapper;
@@ -68,7 +71,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
             chooseEntity.setInCategory(category.getId());
             category.setOption(randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(chooseEntity));
         }
-//        2.2、查找的是已删除数据，则需要过滤
+//        2.1、查找的是已删除数据，则需要过滤
         List<CategoryVO> result = new ArrayList<>();
         if(flag){
             for (CategoryVO vo : categories) {
@@ -89,14 +92,17 @@ public class RandomChooseServiceImpl implements RandomChooseService {
      */
     @Override
     @Transactional
-    public ChooseEntity getStartResult(String categoryId) throws ProportionException,NoSuchAlgorithmException{
-//        0、获取参与随机的数据
+    public ChooseEntity getStartResult(String categoryId) throws NoSuchAlgorithmException, ResultNullDataException, RandomSystemException, ParamValidateException {
+//        1、获取参与随机的数据
         ChooseEntity chooseParam = new ChooseEntity();
         chooseParam.setIsApply(UtilsConstants.isApplyStatic);
         chooseParam.setInCategory(categoryId);
         List<ChooseEntity> randomData = randomCategoryOptionMapper.findRandomCategoryOptionByForeignId(chooseParam);
+        if(randomData.size() == UtilsConstants.DATA_ZERO_SIZE){
+            throw new ResultNullDataException();
+        }
         log.info("随机数据获取成功");
-//        1、数据校验，校验比例正确性
+//        2、数据校验，校验比例正确性
         BigDecimal sumProportion = BigDecimal.ZERO;
         boolean flag = false;
         for (ChooseEntity choose : randomData) {
@@ -108,14 +114,16 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         }
         if(!flag && sumProportion.intValue() < UtilsConstants.PROPORTION_FULL){
             log.info("比例值总和不足100，请重新配置！");
+            throw new RandomSystemException();
         }
         if (sumProportion.intValue() > UtilsConstants.PROPORTION_FULL) {
-            log.info("比例值超过100，请重新配置！");
+            log.info("比例值总和超过100，请重新配置！");
+            throw new ParamValidateException(ExceptionInfoConstants.PARAM_PROPORTION_OUT_OF_EXCEPTION);
         }
-//        2、开始随机并获取结果
+//        3、开始随机并获取结果
         ChooseEntity result = random(randomData);
         log.info("随机结果获取成功");
-//        3、使用随机结果构建条件并存入历史记录和历史记录详情
+//        4、使用随机结果构建条件并存入历史记录和历史记录详情
         String categoryName = randomCategoryMapper.findAllCategory
                 (new CategoryDTO(result.getInCategory())).get(UtilsConstants.FIRST_ONE_INDEX).getCategoryName();
         log.info("查询随机项组名成功");
@@ -129,6 +137,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         int flagHistory = executionHistoryMapper.addHistoryByAll(historyDTO);
         if(flagHistory != UtilsConstants.DATABASE_OPERA_SUCCESS){
             log.info("历史记录添加失败");
+            throw new RandomSystemException();
         }
         List<HistoryOptionDTO> historyOptions = new ArrayList<>();
         randomData.stream().forEach(chooseEntity -> {
@@ -143,6 +152,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         int flagHistoryOption = executionHistoryOptionMapper.addHistoryOptionByAll(historyOptions);
         if (flagHistoryOption != randomData.size()) {
             log.info("历史记录详情添加失败");
+            throw new RandomSystemException();
         }
         return result;
     }
@@ -152,7 +162,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
      * @param randomData
      * @return
      */
-    public ChooseEntity random(List<ChooseEntity> randomData) throws ProportionException,NoSuchAlgorithmException{
+    public ChooseEntity random(List<ChooseEntity> randomData) throws NoSuchAlgorithmException, ParamValidateException {
 
         final BigDecimal hundred = new BigDecimal("100");
 
@@ -180,7 +190,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
 //        判断概率是否合法，是否存在需要手动添加的空概率
         BigDecimal flag = hundred.subtract(sum);
         if (flag.compareTo(BigDecimal.ZERO) < 0) {
-            throw new ProportionException();
+            throw new ParamValidateException(ExceptionInfoConstants.PARAM_PROPORTION_EXCEPTION);
         }
         BigDecimal dividend = flag.divide(new BigDecimal(String.valueOf(count)));
         randomData.stream().forEach(chooseEntity -> {

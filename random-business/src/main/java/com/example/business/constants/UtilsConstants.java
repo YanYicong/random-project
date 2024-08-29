@@ -1,5 +1,8 @@
 package com.example.business.constants;
 
+/**
+ * 应用常量
+ */
 public class UtilsConstants {
 
     /**
@@ -71,5 +74,10 @@ public class UtilsConstants {
      * 最低比例值
      */
     public static final int PROPORTION_LIMIT = 1;
+
+    /**
+     * 数据条目数空值
+     */
+    public static final int DATA_ZERO_SIZE = 0;
 
 }

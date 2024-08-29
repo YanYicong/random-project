@@ -1,11 +1,11 @@
 package com.example.business.service.impl;
 
+import com.example.business.constants.ExceptionInfoConstants;
 import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.DTO.HistoryDTO;
 import com.example.business.entity.VO.HistoryOptionVO;
 import com.example.business.entity.VO.HistoryVO;
 import com.example.business.exception.ParamValidateException;
-import com.example.business.exception.ProportionException;
 import com.example.business.mapper.ExecutionHistoryMapper;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.service.RandomHistoryService;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +41,7 @@ public class RandomHistoryServiceImpl implements RandomHistoryService {
 //        校验查询参数
         if (StringUtils.isNotNull(historyDTO.getEndTime()) && StringUtils.isNotNull(historyDTO.getStartTime())) {
             if((historyDTO.getStartTime().compareTo(historyDTO.getEndTime())) > 0){
-                throw new ParamValidateException();
+                throw new ParamValidateException(ExceptionInfoConstants.PARAM_DATE_PARAMS_EXCEPTION);
             }
         }
         historyDTO.setByUser(UtilsConstants.ADMIN_USER);

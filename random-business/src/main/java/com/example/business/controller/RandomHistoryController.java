@@ -80,13 +80,13 @@ public class RandomHistoryController {
 
     /**
      * 清空历史记录
-     * @param byUser
+     * @param
      * @return
      */
     @ApiModelProperty(value = "清空历史记录")
     @DeleteMapping("/historyCleanAll")
-    public Result cleanAllHistories(String byUser) {
-        byUser = UtilsConstants.ADMIN_USER;
+    public Result cleanAllHistories() {
+        String byUser = UtilsConstants.ADMIN_USER;
         return historyService.moveHistoryAllByUser(byUser) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
@@ -98,7 +98,7 @@ public class RandomHistoryController {
      */
     @ApiModelProperty(value = "历史记录导出")
     @GetMapping("/report")
-    public void historyReport(HttpServletResponse response) throws IOException {
+    public void historyReport(HttpServletResponse response, HistoryDTO historyDTO) throws IOException {
         // 请求头与导出文件名称准备
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
@@ -106,7 +106,7 @@ public class RandomHistoryController {
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 
         // 数据准备
-        HistoryDTO historyDTO = HistoryDTO.builder().byUser(UtilsConstants.ADMIN_USER).build();
+        historyDTO.setByUser(UtilsConstants.ADMIN_USER);
         List<HistoryEntity> result = executionHistoryOptionMapper.getHistoryAndOption(historyDTO);
 
         // 获取模板输入流
