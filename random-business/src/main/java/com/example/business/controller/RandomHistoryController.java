@@ -11,6 +11,7 @@ import com.example.business.handler.CustomCellWriteHandler;
 import com.example.business.handler.ExcelMergeHandler;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.service.RandomHistoryService;
+import com.example.business.utils.JwtUtils;
 import com.example.business.utils.Result;
 import com.example.business.utils.page.TableDataInfo;
 import io.swagger.annotations.Api;
@@ -86,7 +87,7 @@ public class RandomHistoryController {
     @ApiModelProperty(value = "清空历史记录")
     @DeleteMapping("/historyCleanAll")
     public Result cleanAllHistories() {
-        String byUser = UtilsConstants.ADMIN_USER;
+        String byUser = JwtUtils.USERNAME;
         return historyService.moveHistoryAllByUser(byUser) == UtilsConstants.DATABASE_OPERA_SUCCESS ?
                 Result.success(UtilsConstants.RESULT_SUCCESS) : Result.error(UtilsConstants.RESULT_ERROR);
     }
@@ -106,7 +107,7 @@ public class RandomHistoryController {
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 
         // 数据准备
-        historyDTO.setByUser(UtilsConstants.ADMIN_USER);
+        historyDTO.setByUser(JwtUtils.USERNAME);
         List<HistoryEntity> result = executionHistoryOptionMapper.getHistoryAndOption(historyDTO);
 
         // 获取模板输入流

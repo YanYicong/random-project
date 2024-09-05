@@ -36,7 +36,7 @@ public class UtilsConstants {
     public static final String RESULT_ERROR = "操作失败";
 
     /**
-     * 临时用户名
+     * 超管
      */
     public static final String ADMIN_USER = "admin";
 
@@ -79,5 +79,25 @@ public class UtilsConstants {
      * 数据条目数空值
      */
     public static final int DATA_ZERO_SIZE = 0;
+
+    /**
+     * 登录登录成功
+     */
+    public static final String LOGIN_SUCCESS = "登录成功";
+
+    /**
+     * 登录注册成功
+     */
+    public static final String REGISTER_SUCCESS = "注册成功";
+
+    /**
+     * 登录注销成功
+     */
+    public static final String LOGOUT_SUCCESS = "注销成功";
+
+    /**
+     * 请求头中token的key值
+     */
+    public static final String TOKEN_KEY_NAME = "token";
 
 }

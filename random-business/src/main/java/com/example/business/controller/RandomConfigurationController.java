@@ -12,6 +12,7 @@ import com.example.business.exception.ParamValidateException;
 import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomConfigurationService;
+import com.example.business.utils.JwtUtils;
 import com.example.business.utils.Result;
 import com.example.business.utils.StringUtils;
 import io.swagger.annotations.Api;
@@ -158,7 +159,7 @@ public class RandomConfigurationController {
                      categories.add(CategoryDTO.builder()
                              .id(id)
                              .categoryName(t.getCategoryName())
-                             .byUser(UtilsConstants.ADMIN_USER)
+                             .byUser(JwtUtils.USERNAME)
                              .build());
                 }
                  categoryOptions.add(CategoryOptionDTO.builder()

@@ -4,4 +4,112 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.business.mapper.RandomUserMapper">
 
+    <select id="queryUserDetailByAll" resultType="com.example.business.entity.UserEntity">
+        SELECT
+        ID,
+        USERNAME,
+        EMAIL,
+        PASSWORD,
+        NAME,
+        AUTH,
+        STATE,
+        CREATE_TIME,
+        UPDATE_TIME
+        FROM RANDOM_USER
+        <where>
+            <if test="id != null and id != ''">
+                AND ID = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                AND USERNAME = #{username}
+            </if>
+            <if test="email != null and email != ''">
+                AND EMAIL = #{email}
+            </if>
+            <if test="name != null and name != ''">
+                AND NAME = #{name}
+            </if>
+            <if test="auth != null">
+                AND AUTH = #{auth}
+            </if>
+            <if test="state != null">
+                AND STATE = #{state}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                AND CREATE_TIME = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                AND UPDATE_TIME = #{updateTime}
+            </if>
+        </where>
+        limit 1
+    </select>
+
+    <insert id="addUserDetail" parameterType="com.example.business.entity.UserEntity">
+            INSERT INTO RANDOM_USER
+            (ID,USERNAME,EMAIL,PASSWORD,
+        <if test="name != null and name != ''">
+            NAME,
+        </if>
+        <if test="auth != null">
+            AUTH,
+        </if>
+        <if test="state != null">
+            STATE,
+        </if>
+        CREATE_TIME)
+            VALUES
+            (#{id},#{username},#{email},#{password},
+        <if test="name != null and name != ''">
+           #{name},
+        </if>
+        <if test="auth != null">
+            #{auth},
+        </if>
+        <if test="state != null">
+            #{state},
+        </if>
+       DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'))
+    </insert>
+
+    <update id="updateUserDetail" parameterType="com.example.business.entity.UserEntity">
+        UPDATE RANDOM_USER
+        <set>
+            <if test="username != null and username != ''">
+                USERNAME = #{username},
+            </if>
+            <if test="email != null and email != ''">
+                EMAIL = #{email},
+            </if>
+            <if test="password != null and password != ''">
+                PASSWORD = #{password},
+            </if>
+            <if test="name != null and name != ''">
+                NAME = #{name},
+            </if>
+            <if test="auth != null">
+                AUTH = #{auth},
+            </if>
+            <if test="state != null">
+                STATE = #{state},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+            </if>
+        </set>
+    </update>
+
+    <select id="queryUserDetailNum" resultType="int">
+        SELECT COUNT(1)
+        FROM RANDOM_USER
+        <where>
+            <if test="username != null and username != ''">
+                OR USERNAME = #{username}
+            </if>
+            <if test="email != null and email != ''">
+                OR EMAIL = #{email}
+            </if>
+        </where>
+    </select>
+
 </mapper>

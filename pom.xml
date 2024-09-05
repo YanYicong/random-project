@@ -30,6 +30,8 @@
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <spring-boot.version>2.7.1</spring-boot.version>
         <spring-boot-web.version>2.7.1</spring-boot-web.version>
+        <jwt.version>0.9.1</jwt.version>
+        <commons.codec.version>1.15</commons.codec.version>
         <spring-boot.mybatis>2.2.2</spring-boot.mybatis>
         <swagger.fox.version>2.9.2</swagger.fox.version>
         <pagehelper.boot.version>1.4.1</pagehelper.boot.version>
@@ -77,6 +79,18 @@
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${spring-boot.mybatis}</version>
+            </dependency>
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+            <!-- MD5加密 -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons.codec.version}</version>
             </dependency>
             <!-- 分页插件 -->
             <dependency>

@@ -9,6 +9,7 @@ import com.example.business.exception.ParamValidateException;
 import com.example.business.mapper.ExecutionHistoryMapper;
 import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.service.RandomHistoryService;
+import com.example.business.utils.JwtUtils;
 import com.example.business.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class RandomHistoryServiceImpl implements RandomHistoryService {
                 throw new ParamValidateException(ExceptionInfoConstants.PARAM_DATE_PARAMS_EXCEPTION);
             }
         }
-        historyDTO.setByUser(UtilsConstants.ADMIN_USER);
+        historyDTO.setByUser(JwtUtils.USERNAME);
         return executionHistoryMapper.findHistoryByAll(historyDTO);
     }
 

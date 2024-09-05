@@ -50,4 +50,16 @@ public class GlobalExceptionHandler {
         return Result.error(errorMessage);
     }
 
+    /**
+     * 用户相关异常
+     * @param e
+     * @return
+     */
+    @ExceptionHandler({UserInfoException.class})
+    public Result userInfoException(UserInfoException e) {
+        String errorMessage = (e.getMessage() != null && !e.getMessage().isEmpty())
+                          ? e.getMessage() : "用户异常";
+        return Result.error(errorMessage);
+    }
+
 }

@@ -1,7 +1,9 @@
 害嗨嗨
 
-添加security登录验证应用1.0获取token以备2.0切换旧版使用
-服务拆分应用cloudalibaba
+
+服务拆分应用cloudalibaba redis
+
+
 
 1.0 初步实现
 1、初步技术选型 spring boot html
@@ -25,7 +27,9 @@
 5、部署（测试环境生产环境）
 
 3.0
+旧版本应用（session）
 技术扩展
+安全方面（spring security，密文传输等） 多系统，不同权限
 功能扩展
 技术精细化
 代码优化

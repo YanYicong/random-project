@@ -9,6 +9,7 @@ import com.example.business.exception.ParamValidateException;
 import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomConfigurationService;
+import com.example.business.utils.JwtUtils;
 import com.example.business.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
     public int insertAndUpdateCategory(CategoryDTO categoryDTO){
 //        1、新增
         if(StringUtils.isEmpty(categoryDTO.getId())){
-            categoryDTO.setByUser(UtilsConstants.ADMIN_USER);
+            categoryDTO.setByUser(JwtUtils.USERNAME);
             categoryDTO.setId(StringUtils.getUUID());
             return randomCategoryMapper.insertCategory(categoryDTO);
         }
@@ -93,7 +94,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
 
     @Override
     public int updateAllDelete() {
-        String byUser = UtilsConstants.ADMIN_USER;
+        String byUser = JwtUtils.USERNAME;
         CategoryDTO categoryDTO = new  CategoryDTO();
         categoryDTO.setByUser(byUser);
         List<CategoryVO> categories = randomCategoryMapper.findAllCategory(categoryDTO);
@@ -106,7 +107,7 @@ public class RandomConfigurationServiceImpl implements RandomConfigurationServic
 
     @Override
     public int killAllDelete() {
-        String byUser = UtilsConstants.ADMIN_USER;
+        String byUser = JwtUtils.USERNAME;
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setByUser(byUser);
         List<CategoryVO> categories = randomCategoryMapper.findAllCategory(categoryDTO);

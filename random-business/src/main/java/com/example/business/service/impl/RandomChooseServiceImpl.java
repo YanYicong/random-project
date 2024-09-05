@@ -16,6 +16,7 @@ import com.example.business.mapper.ExecutionHistoryOptionMapper;
 import com.example.business.mapper.RandomCategoryMapper;
 import com.example.business.mapper.RandomCategoryOptionMapper;
 import com.example.business.service.RandomChooseService;
+import com.example.business.utils.JwtUtils;
 import com.example.business.utils.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -53,9 +54,9 @@ public class RandomChooseServiceImpl implements RandomChooseService {
      */
     @Override
     public List<CategoryVO> getAllCategories(CategoryDTO categoryDTO) {
-//        1、组装查询条件（当前无用户）
+//        1、组装查询条件
 //        (如果需要查询已删除数据则需要查询所有数据然后过滤掉随机项和组都未删除的数据以显示所有删除的项和组)
-        categoryDTO.setByUser(UtilsConstants.ADMIN_USER);
+        categoryDTO.setByUser(JwtUtils.USERNAME);
         boolean flag = false;
         ChooseEntity chooseEntity = new ChooseEntity();
         if(categoryDTO.getIsApply() == UtilsConstants.notApplyStatic){
@@ -131,7 +132,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         HistoryDTO historyDTO = HistoryDTO.builder()
                 .id(uuid)
                 .randomCategory(categoryName)
-                .byUser(UtilsConstants.ADMIN_USER)
+                .byUser(JwtUtils.USERNAME)
                 .runResult(result.getOptionName())
                 .build();
         int flagHistory = executionHistoryMapper.addHistoryByAll(historyDTO);
