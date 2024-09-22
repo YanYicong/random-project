@@ -1,26 +1,39 @@
-#server:
-#  port: 8001
-#
-#spring:
-#  application:
-#    # 应用名称
-#    name: business
-#  profiles:
-#    # 环境配置
-#    active: @profileActive@
-#  cloud:
-#    nacos:
-#      discovery:
-#        # 服务注册地址
-#        server-addr: @nacos-discovery-addr@
-#        namespace: @namespace@
-#        group: @config-group@
-#      config:
-#        # 配置中心地址
-#        server-addr: @nacos-config-addr@
-#        namespace: @namespace@
-#        # 配置文件格式
-#        file-extension: yml
-#        # 共享配置，支持不同环境使用不同配置文件并指定为yml
-#        shared-configs: application.${spring.cloud.nacos.config.file-extension}
-#        group: @config-group@
+server:
+  port: 8001
+#  servlet:
+#    context-path: /random
+
+spring:
+  main:
+    #允许循环依赖
+    allow-circular-references: true
+    mvc:
+      pathmatch:
+        #解决spring boot和swagger版本不兼容问题
+        matching-strategy: ANT_PATH_MATCHER
+  application:
+    # 应用名称
+    name: business
+  profiles:
+    # 环境配置
+    active: ${profileActive}
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: ${nacos-discovery-addr}
+        namespace: ${namespace}
+        group: ${config-group}
+      config:
+        # 配置中心地址
+        server-addr: ${nacos-config-addr}
+        namespace: ${namespace}
+        # 配置文件格式
+        file-extension: yaml
+        # 共享配置
+#        shared-configs:
+#          - data-id: application.yaml
+#            group: ${config-group}
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml

@@ -16,6 +16,8 @@
         <module>random-business</module>
         <!-- 网关模块 -->
         <module>random-gateway</module>
+        <!-- 定时任务模块 -->
+        <module>random-job</module>
         <!-- 通用模块 -->
         <module>random-common</module>
     </modules>
@@ -28,6 +30,9 @@
         <!-- 依赖版本 -->
         <spring-cloud.version>2021.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+        <nacos.version>2.1.0.RELEASE</nacos.version>
+        <nacos.bootstrap.version>3.1.1</nacos.bootstrap.version>
+        <open-feign.version>3.1.1</open-feign.version>
         <spring-boot.version>2.7.1</spring-boot.version>
         <spring-boot-web.version>2.7.1</spring-boot-web.version>
         <jwt.version>0.9.1</jwt.version>
@@ -39,27 +44,27 @@
         <fastjson.version>1.2.80</fastjson.version>
         <lombok.version>1.18.24</lombok.version>
         <easyexcel.version>3.1.2</easyexcel.version>
+        <log4j2.version>2.17.2</log4j2.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- SpringCloud -->
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.cloud</groupId>-->
-<!--                <artifactId>spring-cloud-dependencies</artifactId>-->
-<!--                <version>${spring-cloud.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; SpringCloud Alibaba &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>com.alibaba.cloud</groupId>-->
-<!--                <artifactId>spring-cloud-alibaba-dependencies</artifactId>-->
-<!--                <version>${spring-cloud-alibaba.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- SpringCloud Alibaba -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!-- SpringBoot 依赖配置 -->
             <!-- spring boot的依赖自适应兼容，且仅用于项目整体依赖，不向下继承-->
             <dependency>
@@ -79,6 +84,30 @@
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${spring-boot.mybatis}</version>
+            </dependency>
+            <!-- nacos -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <!-- nacos 配置中心 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <!-- 引入外部配置 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                <version>${nacos.bootstrap.version}</version>
+            </dependency>
+            <!-- openFeign -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${open-feign.version}</version>
             </dependency>
             <!-- JWT -->
             <dependency>
@@ -135,12 +164,34 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.17.2</version>
+                <version>${log4j2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
-                <version>2.17.2</version>
+                <version>${log4j2.version}</version>
+            </dependency>
+
+            <!-- 工具模块 -->
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>random-common-utils</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>random-common-redis</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>random-common-api</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>random-common-swagger</artifactId>
+                <version>1.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -151,10 +202,10 @@
         <profile>
             <id>dev</id>
             <properties>
-                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
-                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
+                <nacos-discovery-addr>47.93.43.242:8848</nacos-discovery-addr>
+                <nacos-config-addr>47.93.43.242:8848</nacos-config-addr>
                 <config-group>DEFAULT_GROUP</config-group>
-                <namespace>randomDev</namespace>
+                <namespace>dev</namespace>
                 <profileActive>dev</profileActive>
             </properties>
         </profile>
@@ -162,10 +213,10 @@
         <profile>
             <id>prod</id>
             <properties>
-                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
-                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
+                <nacos-discovery-addr>47.93.43.242:8848</nacos-discovery-addr>
+                <nacos-config-addr>47.93.43.242:8848</nacos-config-addr>
                 <config-group>DEFAULT_GROUP</config-group>
-                <namespace>randomProd</namespace>
+                <namespace>prod</namespace>
                 <profileActive>prod</profileActive>
             </properties>
         </profile>
@@ -173,13 +224,41 @@
         <profile>
             <id>test</id>
             <properties>
-                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
-                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
+                <nacos-discovery-addr>47.93.43.242:8848</nacos-discovery-addr>
+                <nacos-config-addr>47.93.43.242:8848</nacos-config-addr>
                 <config-group>DEFAULT_GROUP</config-group>
-                <namespace>randomTest</namespace>
+                <namespace>test</namespace>
                 <profileActive>test</profileActive>
             </properties>
         </profile>
     </profiles>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.yml</include> <!-- 启用对yml文件的过滤 -->
+                </includes>
+                <filtering>true</filtering> <!-- 开启过滤 -->
+            </resource>
+        </resources>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.6.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

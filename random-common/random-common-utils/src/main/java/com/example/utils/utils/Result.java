@@ -1,18 +1,28 @@
-package com.example.utils;
+package com.example.utils.utils;
+
+import com.example.utils.utils.page.TableDataInfo;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 消息响应体
  */
+@ApiModel("消息响应体")
 public class Result extends HashMap<String, Object> {
 
 //---------------------------定义key常量-----------------------------
 
+    @ApiModelProperty("状态码")
     public static final String Code_KEY = "code";
 
+    @ApiModelProperty("消息")
     public static final String MSG_KEY = "msg";
 
+    @ApiModelProperty("数据")
     public static final String DATA_KEY = "data";
 
 //---------------------------构造-----------------------------
@@ -43,6 +53,7 @@ public class Result extends HashMap<String, Object> {
         return new Result(200, "操作成功", data);
     }
 
+
     /**
      * 返回不带数据的成功信息
      * @param msg
@@ -60,6 +71,32 @@ public class Result extends HashMap<String, Object> {
      */
     public static Result success(String msg, Object data) {
         return new Result(200,msg,data);
+    }
+
+    /**
+     * 分页查询成功返回
+     * @param list
+     * @return
+     */
+    public static TableDataInfo successPageInfo(List<?> list){
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(200);
+        rspData.setRows(list);
+        rspData.setMsg("查询成功");
+        rspData.setTotal(new PageInfo(list).getTotal());
+        return rspData;
+    }
+
+    /**
+     * 分页查询失败返回
+     * @param msg
+     * @return
+     */
+    public static TableDataInfo errorPageInfo(String msg){
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(500);
+        rspData.setMsg(msg);
+        return rspData;
     }
 
     /**

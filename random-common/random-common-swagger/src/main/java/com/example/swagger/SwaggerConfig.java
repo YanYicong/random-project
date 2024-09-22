@@ -1,9 +1,7 @@
-package com.example.business.config;
+package com.example.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -63,7 +61,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Random-接口文档")
                 .description("嗨嗨害！来了嗷")
-                .termsOfServiceUrl("127.0.0.1:8001")
+                .termsOfServiceUrl("127.0.0.1:8003")
                 .version("1.0")
                 .build();
     }

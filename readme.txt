@@ -1,9 +1,13 @@
 害嗨嗨
 
+todo
+swagger是服务还是依赖？
+启动项目尝试连接nacos和新库并运行
+docker mysql redis nacos 区分环境
 
-服务拆分应用cloudalibaba redis
-
-
+安放JWT工具位置，是auth？还是util，如果是依赖定义好尽量不要改了
+排查数据库中数据有残留的问题
+上服务器后测试定时任务
 
 1.0 初步实现
 1、初步技术选型 spring boot html
@@ -27,7 +31,8 @@
 5、部署（测试环境生产环境）
 
 3.0
-旧版本应用（session）
+完善日志系统
+旧版本应用（session） 不适用docker部署
 技术扩展
 安全方面（spring security，密文传输等） 多系统，不同权限
 功能扩展
