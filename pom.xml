@@ -12,12 +12,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <!-- 业务模块 -->
         <module>random-business</module>
-        <!-- 网关模块 -->
-        <module>random-gateway</module>
-        <!-- 通用模块 -->
-        <module>random-common</module>
     </modules>
 
     <properties>
@@ -26,8 +21,6 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 依赖版本 -->
-        <spring-cloud.version>2021.0.1</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <spring-boot.version>2.7.1</spring-boot.version>
         <spring-boot-web.version>2.7.1</spring-boot-web.version>
         <spring-boot.mybatis>2.2.2</spring-boot.mybatis>
@@ -41,22 +34,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- SpringCloud -->
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.cloud</groupId>-->
-<!--                <artifactId>spring-cloud-dependencies</artifactId>-->
-<!--                <version>${spring-cloud.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-<!--            &lt;!&ndash; SpringCloud Alibaba &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>com.alibaba.cloud</groupId>-->
-<!--                <artifactId>spring-cloud-alibaba-dependencies</artifactId>-->
-<!--                <version>${spring-cloud-alibaba.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
 
             <!-- SpringBoot 依赖配置 -->
             <!-- spring boot的依赖自适应兼容，且仅用于项目整体依赖，不向下继承-->
@@ -130,42 +107,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!-- maven环境拆分 -->
-    <profiles>
-        <!--开发环境-->
-        <profile>
-            <id>dev</id>
-            <properties>
-                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
-                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
-                <config-group>DEFAULT_GROUP</config-group>
-                <namespace>randomDev</namespace>
-                <profileActive>dev</profileActive>
-            </properties>
-        </profile>
-        <!--生产环境-->
-        <profile>
-            <id>prod</id>
-            <properties>
-                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
-                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
-                <config-group>DEFAULT_GROUP</config-group>
-                <namespace>randomProd</namespace>
-                <profileActive>prod</profileActive>
-            </properties>
-        </profile>
-        <!--测试环境-->
-        <profile>
-            <id>test</id>
-            <properties>
-                <nacos-discovery-addr>127.0.0.1:7000</nacos-discovery-addr>
-                <nacos-config-addr>127.0.0.1:7000</nacos-config-addr>
-                <config-group>DEFAULT_GROUP</config-group>
-                <namespace>randomTest</namespace>
-                <profileActive>test</profileActive>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

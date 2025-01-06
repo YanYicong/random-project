@@ -1,7 +1,7 @@
 害嗨嗨
 
-添加security登录验证应用1.0获取token以备2.0切换旧版使用
-服务拆分应用cloudalibaba
+注意前端代码引用的jquery需要翻墙
+sql语句表名区分大小写
 
 1.0 初步实现
 1、初步技术选型 spring boot html

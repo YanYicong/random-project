@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <title>Random Selection</title>
 <link rel="stylesheet" href="css/choose.css">
 </head>
@@ -15,7 +15,7 @@
 	<script>
 		$(document).ready(function() {
 		    $.ajax({
-		        url: 'http://127.0.0.1:8001/random/choosePage/categories',
+		        url: 'http://47.93.43.242:8080/random/choosePage/categories',
 		        type: 'POST',
 		        contentType: 'application/json',
 		        data: JSON.stringify({ isApply: 0 }),
@@ -38,7 +38,7 @@
 			    
 			    if (selectedId) {
 			        $.ajax({
-			            url: "http://127.0.0.1:8001/random/choosePage/startRandom/" + selectedId,
+			            url: "http://47.93.43.242:8080/random/choosePage/startRandom/" + selectedId,
 			            type: "POST",
 			            contentType: "application/json; charset=utf-8",
 			            success: function(response) {

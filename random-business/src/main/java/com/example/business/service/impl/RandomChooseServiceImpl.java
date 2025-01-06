@@ -179,7 +179,8 @@ public class RandomChooseServiceImpl implements RandomChooseService {
         if (BigDecimal.ZERO.compareTo(sum) == 0) {
             int randomInt = 0;
             try {
-                SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+//                SecureRandom.getInstanceStrong();在docker容器中此处执行失败且不报错
+                SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
                 randomInt = secureRandom.nextInt(randomData.size());
             }catch (NoSuchAlgorithmException e){
                 throw new NoSuchAlgorithmException();
@@ -201,7 +202,7 @@ public class RandomChooseServiceImpl implements RandomChooseService {
 //        获取随机概率
         int randomInt = 0;
         try {
-            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
             randomInt = secureRandom.nextInt(10001);
         }catch (NoSuchAlgorithmException e){
             throw new NoSuchAlgorithmException();

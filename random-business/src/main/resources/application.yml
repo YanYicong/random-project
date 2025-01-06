@@ -1,12 +1,13 @@
 server:
-  port: 8001
+  port: 8080
   servlet:
     context-path: /random
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/random-dev?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT&nullCatalogMeansCurrent = true
+    url: jdbc:mysql://47.93.43.242:3306/random_test?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT&nullCatalogMeansCurrent=true
+#    url: jdbc:mysql://47.93.43.242:3306/random_test&useSSL=true&requireSSL=true&serverTimezone=UTC&verifyServerCertificate=true&trustCertificateKeyStoreUrl=file:path/to/ca.pem&trustCertificateKeyStorePassword=password
     username: root
     password: 200087
   mvc:

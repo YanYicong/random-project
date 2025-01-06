@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <title>Random Category</title>
 <link rel="stylesheet" href="css/category.css">
 </head>
@@ -43,7 +43,7 @@
 
             function fetchAndPopulateLeftList() {
                 $.ajax({
-                    url: 'http://127.0.0.1:8001/random/choosePage/categories',
+                    url: 'http://47.93.43.242:8080/random/choosePage/categories',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ isApply: 0 }),
@@ -170,10 +170,10 @@
                 let url;
                 let data;
                 if (type === 'category') {
-                    url = 'http://127.0.0.1:8001/random/randomOption/randomCategory';
+                    url = 'http://47.93.43.242:8080/random/randomOption/randomCategory';
                     data = { id: id, categoryName: newName };
                 } else {
-                    url = 'http://127.0.0.1:8001/random/randomOption/randomOption';
+                    url = 'http://47.93.43.242:8080/random/randomOption/randomOption';
                     data = { id: id, optionName: newName, inCategory: categoryID, probabilityProportion: newProbability };
                 }
                 $.ajax({
@@ -190,7 +190,7 @@
 
             function fetchAndPopulateRightList() {
                 $.ajax({
-                    url: 'http://127.0.0.1:8001/random/choosePage/categories',
+                    url: 'http://47.93.43.242:8080/random/choosePage/categories',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ isApply : 0 }),
@@ -206,7 +206,7 @@
 
             function saveNewCategory(newCategoryName) {
                 $.ajax({
-                    url: 'http://127.0.0.1:8001/random/randomOption/randomCategory',
+                    url: 'http://47.93.43.242:8080/random/randomOption/randomCategory',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ categoryName: newCategoryName }),
@@ -219,7 +219,7 @@
 
             function saveNewOption(newOptionName, categoryID) {
                 $.ajax({
-                    url: 'http://127.0.0.1:8001/random/randomOption/randomOption',
+                    url: 'http://47.93.43.242:8080/random/randomOption/randomOption',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ optionName: newOptionName, inCategory: categoryID }),
@@ -244,7 +244,7 @@
             });
 			
 			$('#template-button').on('click', function() {
-			    window.location.href = 'http://127.0.0.1:8001/random/randomOption/template';
+			    window.location.href = 'http://47.93.43.242:8080/random/randomOption/template';
 			});
 			
 			$('#import-button').on('click', function() {
@@ -258,7 +258,7 @@
 			        formData.append('file', file);
 	
 			        $.ajax({
-			            url: 'http://127.0.0.1:8001/random/randomOption/upload',
+			            url: 'http://47.93.43.242:8080/random/randomOption/upload',
 			            type: 'POST',
 			            data: formData,
 			            processData: false,
@@ -277,9 +277,9 @@
             function deleteCategoryOrOption(type, id) {
                 let url;
                 if (type === 'category') {
-                    url = 'http://127.0.0.1:8001/random/randomOption/randomCategory';
+                    url = 'http://47.93.43.242:8080/random/randomOption/randomCategory';
                 } else {
-                    url = 'http://127.0.0.1:8001/random/randomOption/randomOption';
+                    url = 'http://47.93.43.242:8080/random/randomOption/randomOption';
                 }
 
                 $.ajax({
@@ -309,7 +309,7 @@
             // 获取并填充模态窗口左侧列表的数据
             function fetchAndPopulateLeftInnerList() {
                 $.ajax({
-                    url: 'http://127.0.0.1:8001/random/choosePage/categories',
+                    url: 'http://47.93.43.242:8080/random/choosePage/categories',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ isApply: 1 }),
@@ -352,7 +352,7 @@
 
             function cleanAll() {
                 $.ajax({
-                    url: 'http://127.0.0.1:8001/random/randomOption/killAll',
+                    url: 'http://47.93.43.242:8080/random/randomOption/killAll',
                     type: 'DELETE',
                     contentType: 'application/json',
                     success: function() {
@@ -364,7 +364,7 @@
 
             function restoreAll() {
                 $.ajax({
-                    url: 'http://127.0.0.1:8001/random/randomOption/restoreAll',
+                    url: 'http://47.93.43.242:8080/random/randomOption/restoreAll',
                     type: 'POST',
                     contentType: 'application/json',
                     success: function() {
@@ -377,9 +377,9 @@
             function restoreCategoryOrOption(type, id) {
                 let url;
                 if (type === 'category') {
-                    url = 'http://127.0.0.1:8001/random/randomOption/randomCategory';
+                    url = 'http://47.93.43.242:8080/random/randomOption/randomCategory';
                 } else {
-                    url = 'http://127.0.0.1:8001/random/randomOption/randomOption';
+                    url = 'http://47.93.43.242:8080/random/randomOption/randomOption';
                 }
 
                 $.ajax({
@@ -397,9 +397,9 @@
             function cleanCategoryOrOption(type, id) {
                 let url;
                 if (type === 'category') {
-                    url = 'http://127.0.0.1:8001/random/randomOption/delRandomCategory';
+                    url = 'http://47.93.43.242:8080/random/randomOption/delRandomCategory';
                 } else {
-                    url = 'http://127.0.0.1:8001/random/randomOption/delRandomOption';
+                    url = 'http://47.93.43.242:8080/random/randomOption/delRandomOption';
                 }
 
                 $.ajax({

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>  
+<script src="js/jquery.min.js"></script>
+<script src="js/flatpickr.js"></script>
+<script src="js/zh.js"></script>
 <title>Random History</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="css/flatpickr.min.css">
 <link rel="stylesheet" href="css/history.css">
 <style>
     .highlight {
@@ -209,7 +209,7 @@
     
     function fetchData(charValue, startDate, endDate) {  
         $.ajax({  
-            url: 'http://localhost:8001/random/randomHistory/historyPage',   
+            url: 'http://47.93.43.242:8080/random/randomHistory/historyPage',
             type: 'POST',  
             dataType: 'json',
             data: {
@@ -233,7 +233,7 @@
 	
 	function reportDate() {
 	    $.ajax({
-	        url: 'http://localhost:8001/random/randomHistory/report',
+	        url: 'http://47.93.43.242:8080/random/randomHistory/report',
 	        type: 'GET',
 	        xhrFields: { responseType: 'blob' },
 	        success: function(data) {
@@ -319,7 +319,7 @@
     
     function deleteSelectedRecords(ids) {
         $.ajax({
-            url: 'http://localhost:8001/random/randomHistory/historyClean',
+            url: 'http://47.93.43.242:8080/random/randomHistory/historyClean',
             type: 'DELETE',
             contentType: 'application/json',
             data: JSON.stringify(ids),
@@ -334,7 +334,7 @@
     
     function deleteAllMyRecords() {
         $.ajax({
-            url: 'http://localhost:8001/random/randomHistory/historyCleanAll',
+            url: 'http://47.93.43.242:8080/random/randomHistory/historyCleanAll',
             type: 'DELETE',
             contentType: 'application/json',
             success: function(response) {
@@ -348,7 +348,7 @@
     
     function fetchDetailsAndShowModal(historyId) {
         $.ajax({
-            url: 'http://localhost:8001/random/randomHistory/historyOption/' + historyId,
+            url: 'http://47.93.43.242:8080/random/randomHistory/historyOption/' + historyId,
             type: 'GET',
 			dataType: 'json',
             // data: { id: historyId },
