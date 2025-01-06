@@ -8,6 +8,8 @@ spring:
   profiles:
     # 环境配置
     active: ${profileActive}
+  main:
+    web-application-type: reactive
   cloud:
     nacos:
       discovery:
@@ -22,5 +24,7 @@ spring:
         # 配置文件格式
         file-extension: yml
         # 共享配置，支持不同环境使用不同配置文件并指定为yml
-        shared-configs: application.${spring.cloud.nacos.config.file-extension}
-        group: ${config-group}
+        shared-dataids: application.yaml
+
+
+

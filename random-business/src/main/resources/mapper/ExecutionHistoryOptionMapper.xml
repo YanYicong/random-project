@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteHistoryOptionAll">
-        DELETE FROM EXECUTION_HISTORY_OPTION
+        DELETE FROM EXECUTION_HISTORY_OPTION WHERE 1=1
     </delete>
 
     <select id="getHistoryAndOption" resultMap="ReportHistoryEntity">

@@ -7,7 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
-@MapperScan("com.example.business.mapper")
+//@MapperScan("com.example.business.mapper")
 @EnableScheduling
 @SpringBootApplication
 @EnableDiscoveryClient

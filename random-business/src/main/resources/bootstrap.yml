@@ -31,9 +31,7 @@ spring:
         # 配置文件格式
         file-extension: yaml
         # 共享配置
-#        shared-configs:
-#          - data-id: application.yaml
-#            group: ${config-group}
+        shared-dataids: application.yaml
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml

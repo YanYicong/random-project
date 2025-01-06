@@ -76,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteHistoryAll">
-        DELETE FROM EXECUTION_HISTORY
+        DELETE FROM EXECUTION_HISTORY WHERE 1=1
     </delete>
 
 </mapper>

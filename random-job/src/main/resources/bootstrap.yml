@@ -7,20 +7,25 @@ spring:
     name: job
   profiles:
     # 环境配置
-    active: @profileActive@
+    active: ${profileActive}
+    #设置启动模式（reactive响应式 servlet Servlet容器 none不使用容器）
+  main:
+    web-application-type: servlet
   cloud:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: @nacos-discovery-addr@
-        namespace: @namespace@
-        group: @config-group@
+        server-addr: ${nacos-discovery-addr}
+        namespace: ${namespace}
+        group: ${config-group}
       config:
         # 配置中心地址
-        server-addr: @nacos-config-addr@
-        namespace: @namespace@
+        server-addr: ${nacos-config-addr}
+        namespace: ${namespace}
         # 配置文件格式
         file-extension: yml
         # 共享配置，支持不同环境使用不同配置文件并指定为yml
-        shared-configs: application.${spring.cloud.nacos.config.file-extension}
-        group: @config-group@
+        shared-dataids: application.yaml
+
+
+
