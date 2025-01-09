@@ -17,7 +17,7 @@ import java.util.List;
 public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     // 不需要 token 验证的路径
-    private static final List<String> EXCLUDED_PATHS = Arrays.asList("/random/api/login", "/random/api/register", "/random/api/logout");
+    private static final List<String> EXCLUDED_PATHS = Arrays.asList("/random/api/login", "/random/api/register", "/random/api/logout", "/random/api/captcha");
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

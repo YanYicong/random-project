@@ -4,6 +4,11 @@ server:
     context-path: /random
 
 spring:
+  redis:
+    host: 47.93.43.242
+    port: 6300
+    password: 200087
+    timeout: 5000ms
   main:
     #允许循环依赖
     allow-circular-references: true

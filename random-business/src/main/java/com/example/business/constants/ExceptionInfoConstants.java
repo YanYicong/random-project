@@ -35,4 +35,16 @@ public class ExceptionInfoConstants {
      */
     public static final String USER_ALREADY_EXISTS = "用户已存在";
 
+    /**
+     * 登录错误：验证码错误
+     */
+    public static final String CAPTCHA_ERROR = "请正确输入验证码";
+
+    /**
+     * 注册错误：邮箱非法
+     */
+    public static final String EMAIL_ERROR = "请输入合法邮箱";
+
+    public static final String EMAIL_TIMEOUT = "验证码已失效，请重新获取";
+
 }

@@ -43,6 +43,7 @@
         <spring-boot.mybatis>2.2.2</spring-boot.mybatis>
         <swagger.fox.version>2.9.2</swagger.fox.version>
         <pagehelper.boot.version>1.4.1</pagehelper.boot.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
         <swagger.core.version>1.6.2</swagger.core.version>
         <fastjson.version>1.2.80</fastjson.version>
         <lombok.version>1.18.24</lombok.version>
@@ -122,6 +123,12 @@
                 <artifactId>spring-cloud-starter-bootstrap</artifactId>
                 <version>${nacos.bootstrap.version}</version>
             </dependency>
+            <!-- redis -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
             <!-- openFeign -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -166,6 +173,11 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
             </dependency>
             <!-- swagger -->
             <dependency>

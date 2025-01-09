@@ -1,15 +1,10 @@
 害嗨嗨
 
 todo
-验证码redis
+完善环境
+细化报错
 
-
-安放JWT工具位置，是auth？还是util，如果是依赖定义好尽量不要改了
 swagger是服务还是依赖？
-
-
-启动项目尝试连接nacos和新库并运行
-docker mysql redis nacos 区分环境
 
 
 1.0 初步实现
