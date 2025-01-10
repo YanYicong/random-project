@@ -31,8 +31,10 @@ public class JavaMailWithAttachment {
         properties.put("mail.smtp.ssl.enable", "true");
 //        SSL加密端口
         properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.starttls.enable", "true"); // 启用STARTTLS加密（如果服务器支持）
-        properties.put("mail.smtp.host", "smtp.qq.com");  // 设置SMTP服务器
+//        启用STARTTLS加密（如果服务器支持）
+        properties.put("mail.smtp.starttls.enable", "true");
+//        设置SMTP服务器
+        properties.put("mail.smtp.host", "smtp.qq.com");
         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");  // 设置SSL套接字工厂
 
         session = Session.getInstance(properties);
@@ -50,10 +52,10 @@ public class JavaMailWithAttachment {
      * @param attachment  附件
      */
     public void doSendHtmlEmail(String subject, String sendHtml, String receiveUser, String cs, File attachment,
-                                String emailHost, String emailUser, String emailPassword) throws Exception {
+                                String emailHost,String userName, String emailUser, String emailPassword) throws Exception {
         try {
             // 发件人
-            InternetAddress from = new InternetAddress(emailUser);
+            InternetAddress from = new InternetAddress(emailUser,userName,"UTF-8");
             message.setFrom(from);
 
             // 收件人

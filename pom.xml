@@ -47,6 +47,7 @@
         <swagger.core.version>1.6.2</swagger.core.version>
         <fastjson.version>1.2.80</fastjson.version>
         <lombok.version>1.18.24</lombok.version>
+        <email.util.version>1.6.2</email.util.version>
         <easyexcel.version>3.1.2</easyexcel.version>
         <log4j2.version>2.17.2</log4j2.version>
     </properties>
@@ -206,6 +207,12 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+            <!--email工具-->
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${email.util.version}</version>
             </dependency>
             <!-- easyexcel导入导出工具 -->
             <dependency>

@@ -39,6 +39,10 @@ public class EmailConfig {
      */
     private String emailHost;
     /**
+     * 发送人标题名
+     */
+    private String userName;
+    /**
      * 发送人
      */
     private String emailUser;

@@ -1,6 +1,7 @@
 package com.example.business.controller;
 
 import com.example.business.config.EmailConfig;
+import com.example.business.config.EmailTemplateConfig;
 import com.example.business.constants.ExceptionInfoConstants;
 import com.example.business.constants.UtilsConstants;
 import com.example.business.entity.UserEntity;
@@ -11,6 +12,8 @@ import com.example.business.utils.JwtUtils;
 import com.example.business.utils.Result;
 import com.example.business.utils.StringUtils;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,6 +85,8 @@ public class UserController {
 
     /**
      * 获取邮箱验证码
+     *  这里邮件发送方法部分参数内容暂未使用，不传参
+     *  邮件内容不通过次配置类相关位置引入，由于是HTML网页所以单独引入
      * @param email
      * @return
      */
@@ -95,14 +100,16 @@ public class UserController {
         try{
             javaMailWithAttachment
                     .doSendHtmlEmail(emailConfig.getSubject(),
-                            emailConfig.getSendHtml() + captcha,
+                            EmailTemplateConfig.getEmailTemplate(captcha),
                             email,
                             null,
                             new File(""),
                             emailConfig.getEmailHost(),
+                            emailConfig.getUserName(),
                             emailConfig.getEmailUser(),
                             emailConfig.getEmailPassword());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new UserInfoException(ExceptionInfoConstants.EMAIL_ERROR);
         }
         return Result.success(UtilsConstants.RESULT_SUCCESS);
