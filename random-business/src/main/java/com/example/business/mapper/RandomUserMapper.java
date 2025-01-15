@@ -31,6 +31,11 @@ public interface RandomUserMapper {
      */
     public int updateUserDetail(UserEntity userEntity);
 
+    /**
+     * 判断用户是否存在
+     * @param userEntity
+     * @return
+     */
     public int queryUserDetailNum(UserEntity userEntity);
 
 }

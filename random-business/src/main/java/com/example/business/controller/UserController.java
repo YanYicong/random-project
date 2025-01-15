@@ -12,8 +12,7 @@ import com.example.business.utils.JwtUtils;
 import com.example.business.utils.Result;
 import com.example.business.utils.StringUtils;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import static com.example.business.utils.PasswordUtils.hashPassword;
 import static com.example.business.utils.PasswordUtils.verifyPassword;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -164,7 +164,7 @@ public class UserController {
         }
 //        生成token并存入响应头
         String token = JwtUtils.generateToken(result.getUsername());
-        response.setHeader("token", token);
+        response.setHeader(UtilsConstants.TOKEN_KEY_NAME, token);
         return Result.success(UtilsConstants.LOGIN_SUCCESS);
     }
 
@@ -183,23 +183,49 @@ public class UserController {
         if(size != UtilsConstants.DATA_ZERO_SIZE){
             throw new UserInfoException(ExceptionInfoConstants.USER_ALREADY_EXISTS);
         }
-//        验证邮箱
-        String captcha = redisTemplate.opsForValue().get(user.getEmail());
-        if (captcha == null) {
-            throw new UserInfoException(ExceptionInfoConstants.EMAIL_TIMEOUT);
-        }
-        if(emailCaptcha == null || captcha == null || !captcha.equals(emailCaptcha)){
-            throw new UserInfoException(ExceptionInfoConstants.CAPTCHA_ERROR);
-        }
-
+//        验证邮箱验证码
+        emailCaptcha(user, emailCaptcha);
 //        加密
         user.setPassword(hashPassword(user.getPassword()));
 //        数据组装
         user.setId(StringUtils.getUUID());
 //        保存用户到数据库
-        int log = randomUserMapper.addUserDetail(user);
-        System.out.println(log);
+        int success = randomUserMapper.addUserDetail(user);
+        if(success == UtilsConstants.DATABASE_OPERA_SUCCESS){
+            log.info(UtilsConstants.REGISTER_SUCCESS);
+        }
         return Result.success(UtilsConstants.REGISTER_SUCCESS);
+    }
+
+    /**
+     * 修改密码
+     * @param user
+     * @param emailCaptcha
+     * @return
+     * @throws UserInfoException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeySpecException
+     */
+    @PostMapping("/remakePassword")
+    public Result updatePassword(@RequestBody UserEntity user, @RequestParam String emailCaptcha) throws UserInfoException, NoSuchAlgorithmException, InvalidKeySpecException {
+//        判断用户是否存在
+        int size = randomUserMapper.queryUserDetailNum(user);
+        if(size == UtilsConstants.DATA_ZERO_SIZE){
+            throw new UserInfoException(ExceptionInfoConstants.USERNAME_NOT_FOUND);
+        }
+//        验证邮箱验证码
+        emailCaptcha(user, emailCaptcha);
+//        加密
+        user.setPassword(hashPassword(user.getPassword()));
+//        保存用户到数据库
+        int success = randomUserMapper.updateUserDetail(user);
+        if(success == UtilsConstants.DATABASE_OPERA_SUCCESS){
+            log.info(UtilsConstants.REGISTER_SUCCESS);
+            return Result.success(UtilsConstants.UPDATE_SUCCESS);
+        }else{
+            return Result.error(UtilsConstants.RESULT_ERROR);
+        }
+
     }
 
     /**
@@ -210,8 +236,7 @@ public class UserController {
      */
     @PostMapping("/logout")
     public Result logout(HttpServletRequest request, @RequestBody UserEntity user) {
-        String token = request.getHeader("token");
-
+        String token = request.getHeader(UtilsConstants.TOKEN_KEY_NAME);
 //        删除token(清空临时USERNAME)
         JwtUtils.USERNAME = "";
 //        返回注销成功的响应
@@ -237,5 +262,16 @@ public class UserController {
         // 删除 Redis 中的验证码，防止重复使用
         redisTemplate.delete(captchaKey);
         return true;
+    }
+
+    private void emailCaptcha(UserEntity user, String emailCaptcha) throws UserInfoException {
+//        验证邮箱
+        String captcha = redisTemplate.opsForValue().get(user.getEmail());
+        if (captcha == null) {
+            throw new UserInfoException(ExceptionInfoConstants.EMAIL_TIMEOUT);
+        }
+        if(emailCaptcha == null || captcha == null || !captcha.equals(emailCaptcha)){
+            throw new UserInfoException(ExceptionInfoConstants.CAPTCHA_ERROR);
+        }
     }
 }

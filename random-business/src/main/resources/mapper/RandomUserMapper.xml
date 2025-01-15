@@ -78,9 +78,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="username != null and username != ''">
                 USERNAME = #{username},
             </if>
-            <if test="email != null and email != ''">
-                EMAIL = #{email},
-            </if>
             <if test="password != null and password != ''">
                 PASSWORD = #{password},
             </if>
@@ -97,6 +94,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 UPDATE_TIME = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
             </if>
         </set>
+        <where>
+            EMAIL = #{email}
+        </where>
     </update>
 
     <select id="queryUserDetailNum" resultType="int">

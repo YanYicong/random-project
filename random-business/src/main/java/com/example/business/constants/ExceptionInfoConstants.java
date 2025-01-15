@@ -38,7 +38,7 @@ public class ExceptionInfoConstants {
     /**
      * 登录错误：验证码错误
      */
-    public static final String CAPTCHA_ERROR = "请正确输入验证码";
+    public static final String CAPTCHA_ERROR = "验证码错误或已失效，请刷新重试";
 
     /**
      * 注册错误：邮箱非法

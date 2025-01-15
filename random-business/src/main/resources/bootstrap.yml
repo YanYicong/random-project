@@ -1,4 +1,6 @@
 server:
+  #配置任何ip可访问
+  address: 0.0.0.0
   port: 8001
   servlet:
     context-path: /random

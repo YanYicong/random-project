@@ -91,6 +91,11 @@ public class UtilsConstants {
     public static final String REGISTER_SUCCESS = "注册成功";
 
     /**
+     * 修改成功
+     */
+    public static final String UPDATE_SUCCESS = "修改成功";
+
+    /**
      * 登录注销成功
      */
     public static final String LOGOUT_SUCCESS = "注销成功";
